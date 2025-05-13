@@ -1,29 +1,62 @@
 #include <Arduino.h>
+#include <ESP8266WiFi.h>   // ✅ ESP8266-compatible
+#include <WiFiUdp.h>
 
-// put function declarations here:
-int myFunction(int, int);
-void lightUpBuiltinLED(); // Function to light up built-in LED
+const char* ssid = "Dira7ShelHasmachot";
+const char* password = "TechnionIsFun7";
+
+WiFiUDP udp;
+const int udpPort = 1234;
+
+const int bufferSize = 256;
+char udpBuffer[bufferSize];
+
+// Threshold for detecting a clap (tune this)
+const int16_t CLAP_THRESHOLD = 5000;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
-  lightUpBuiltinLED(); // Light up the built-in LED
+  Serial.begin(115200);
+
+  // Start WiFi connection
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
+
+  // Wait until connected
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\nConnected to WiFi.");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  // Start UDP on port 1234
+  udp.begin(1234);
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on (LOW is ON for ESP8266)
-  delay(500);                       // Wait for 500 milliseconds
-  digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off (HIGH is OFF for ESP8266)
-  delay(500);     
+  int packetSize = udp.parsePacket();
+  if (packetSize > 0 && packetSize <= bufferSize) {
+    Serial.print("Received packet! Size: ");
+    Serial.println(packetSize);
+    udp.read(udpBuffer, packetSize);
+    
+    // Treat buffer as 16-bit PCM samples
+    int16_t* samples = (int16_t*)udpBuffer;
+    int numSamples = packetSize / 2;
+
+    for (int i = 0; i < numSamples; i++) {
+      Serial.println("Data detected");
+      delay(300);
+      int16_t sample = samples[i];
+      if (abs(sample) > CLAP_THRESHOLD) {
+        Serial.println("👏 Clap detected!");
+        delay(300);  // Basic debounce
+        break;
+      }
+    }
+  }
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
 
-// Function to light up the built-in LED on ESP8266
-void lightUpBuiltinLED() {
-  pinMode(LED_BUILTIN, OUTPUT); // Set built-in LED pin as output
-  digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (LOW is ON for ESP8266)
-}
