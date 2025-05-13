@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../../../../technion/comp_arch_projects/HW1"
+		},
+		{
+			"name": "Init project",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"bp_api.h": "c"
+		}
+	}
+}
