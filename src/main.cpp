@@ -2,20 +2,24 @@
 #include <ESP8266WiFi.h>   // ✅ ESP8266-compatible
 #include <WiFiUdp.h>
 
-const char* ssid = "Dira7ShelHasmachot";
-const char* password = "TechnionIsFun7";
+// const char* ssid = "Dira7ShelHasmachot";
+// const char* password = "TechnionIsFun7";
+// const char* ssid = "pragnet";
+// const char* password = "0542560198";
+const char* ssid = "weefy";
+const char* password = "weefy123456";
 
 WiFiUDP udp;
 const int udpPort = 1234;
 
-const int bufferSize = 256;
+const int bufferSize = 1024;
 char udpBuffer[bufferSize];
 
 // Threshold for detecting a clap (tune this)
 const int16_t CLAP_THRESHOLD = 5000;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   // Start WiFi connection
   WiFi.begin(ssid, password);
@@ -38,8 +42,6 @@ void setup() {
 void loop() {
   int packetSize = udp.parsePacket();
   if (packetSize > 0 && packetSize <= bufferSize) {
-    Serial.print("Received packet! Size: ");
-    Serial.println(packetSize);
     udp.read(udpBuffer, packetSize);
     
     // Treat buffer as 16-bit PCM samples
@@ -47,8 +49,6 @@ void loop() {
     int numSamples = packetSize / 2;
 
     for (int i = 0; i < numSamples; i++) {
-      Serial.println("Data detected");
-      delay(300);
       int16_t sample = samples[i];
       if (abs(sample) > CLAP_THRESHOLD) {
         Serial.println("👏 Clap detected!");
