@@ -2,6 +2,8 @@
 #include <ESP8266WiFi.h>   // ✅ ESP8266-compatible
 #include <WiFiUdp.h>
 
+void serial_print(int16_t sample);
+
 // const char* ssid = "Dira7ShelHasmachot";
 // const char* password = "TechnionIsFun7";
 // const char* ssid = "pragnet";
@@ -50,13 +52,20 @@ void loop() {
 
     for (int i = 0; i < numSamples; i++) {
       int16_t sample = samples[i];
-      if (abs(sample) > CLAP_THRESHOLD) {
-        Serial.println("👏 Clap detected!");
-        delay(300);  // Basic debounce
-        break;
+      // if (abs(sample) > CLAP_THRESHOLD) {
+      //   Serial.println("👏 Clap detected!");
+      //   delay(300);  // Basic debounce
+      //   break;
+      // }
+      if( i % 16 == 0){
+        serial_print(sample);
       }
     }
   }
+}
+
+void serial_print(int16_t sample) {
+  Serial.printf("%d\n", sample);
 }
 
 
