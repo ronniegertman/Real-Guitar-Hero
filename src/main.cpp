@@ -8,8 +8,10 @@ void serial_print(int16_t sample);
 // const char* password = "TechnionIsFun7";
 // const char* ssid = "pragnet";
 // const char* password = "0542560198";
-const char* ssid = "weefy";
-const char* password = "weefy123456";
+// const char* ssid = "weefy";
+// const char* password = "weefy123456";
+const char* ssid = "oz";
+const char* password = "12345678";
 
 WiFiUDP udp;
 const int udpPort = 1234;
