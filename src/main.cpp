@@ -1,29 +1,25 @@
 #include <Arduino.h>
+#include <FastLED.h>
 
-// put function declarations here:
-int myFunction(int, int);
-void lightUpBuiltinLED(); // Function to light up built-in LED
+#define LED_PIN     2
+#define NUM_LEDS    12
+#define BRIGHTNESS  64
+#define LED_TYPE    WS2812B
+#define COLOR_ORDER GRB
+
+CRGB leds[NUM_LEDS];
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
-  lightUpBuiltinLED(); // Light up the built-in LED
+  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+  FastLED.setBrightness(BRIGHTNESS);
 }
 
 void loop() {
-  digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on (LOW is ON for ESP8266)
-  delay(500);                       // Wait for 500 milliseconds
-  digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off (HIGH is OFF for ESP8266)
-  delay(500);     
-}
+  fill_solid(leds, NUM_LEDS, CRGB::Red);
+  FastLED.show();
+  delay(500);
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
-
-// Function to light up the built-in LED on ESP8266
-void lightUpBuiltinLED() {
-  pinMode(LED_BUILTIN, OUTPUT); // Set built-in LED pin as output
-  digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (LOW is ON for ESP8266)
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
+  FastLED.show();
+  delay(500);
 }
