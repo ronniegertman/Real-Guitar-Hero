@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <ESP8266WiFi.h>   // ✅ ESP8266-compatible
+#include <"dsp.h">
 #include <WiFiUdp.h>
 
 void serial_print(int16_t sample);
