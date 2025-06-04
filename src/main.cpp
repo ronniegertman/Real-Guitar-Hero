@@ -1,73 +1,31 @@
 #include <Arduino.h>
-#include <"dsp.h">
-#include <WiFiUdp.h>
-
-void serial_print(int16_t sample);
-
-// const char* ssid = "Dira7ShelHasmachot";
-// const char* password = "TechnionIsFun7";
-// const char* ssid = "pragnet";
-// const char* password = "0542560198";
-// const char* ssid = "weefy";
-// const char* password = "weefy123456";
-const char* ssid = "oz";
-const char* password = "12345678";
-
-WiFiUDP udp;
-const int udpPort = 1234;
-
-const int bufferSize = 1024;
-char udpBuffer[bufferSize];
-
-// Threshold for detecting a clap (tune this)
-const int16_t CLAP_THRESHOLD = 5000;
+#include "dsp.h"
+#include <Math.h>
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 2
+#endif
 
 void setup() {
-  Serial.begin(9600);
-
-  // Start WiFi connection
-  WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi");
-
-  // Wait until connected
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  pinMode(LED_BUILTIN, OUTPUT); // Initialize the built-in LED pin as output
+  Serial.begin(9600);         // Start serial communication at 115200 baud rate
+  // Generate a sine wave with a frequency of 440 Hz
+  float frequency = 440.0; // Frequency in Hz
+  float sampleRate = 10000; // Sample rate in Hz
+  int numSamples = 512; // Number of samples to generate
+  float sineWave[numSamples];
+  for (int i = 0; i < numSamples; i++) {
+    sineWave[i] = sin(2 * M_PI * frequency * i / sampleRate);
   }
+  delay(1000);
+  Serial.printf("Goertzel power: %f\n", Goertzel(sineWave, frequency));
+  Serial.printf("Goertzel power: %f\n", Goertzel(sineWave, frequency * 2));
+  Serial.printf("Note detected: %f\n", detect_note(sineWave));
 
-  Serial.println("\nConnected to WiFi.");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
-  // Start UDP on port 1234
-  udp.begin(1234);
 }
 
 void loop() {
-  int packetSize = udp.parsePacket();
-  if (packetSize > 0 && packetSize <= bufferSize) {
-    udp.read(udpBuffer, packetSize);
-    
-    // Treat buffer as 16-bit PCM samples
-    int16_t* samples = (int16_t*)udpBuffer;
-    int numSamples = packetSize / 2;
-
-    for (int i = 0; i < numSamples; i++) {
-      int16_t sample = samples[i];
-      // if (abs(sample) > CLAP_THRESHOLD) {
-      //   Serial.println("👏 Clap detected!");
-      //   delay(300);  // Basic debounce
-      //   break;
-      // }
-      if( i % 16 == 0){
-        serial_print(sample);
-      }
-    }
-  }
+  digitalWrite(LED_BUILTIN, HIGH); // Turn the LED on
+  delay(500);                      // Wait for 500 milliseconds
+  digitalWrite(LED_BUILTIN, LOW);  // Turn the LED off
+  delay(500);                      // Wait for 500 milliseconds
 }
-
-void serial_print(int16_t sample) {
-  Serial.printf("%d\n", sample);
-}
-
-
