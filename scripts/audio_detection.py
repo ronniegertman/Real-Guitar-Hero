@@ -1,28 +1,46 @@
-import pyaudio
-import struct
+import numpy as np
+import scipy.io.wavfile as wav
+from scipy.signal import resample
+import matplotlib.pyplot as plt
+import serial
+import time as pytime
 
-CHUNK = 256
-RATE = 8000
+NUM_SAMPLES = 512
+SAMPLING_RATE = 10000  # Desired sampling rate in Hz
 
-p = pyaudio.PyAudio()
-stream = p.open(format=pyaudio.paInt16,
-                channels=1,
-                rate=RATE,
-                input=True,
-                frames_per_buffer=CHUNK)
+def audio_sampling():
+    # Read WAV file (returns sample_rate, data)
+    sample_rate, data = wav.read("../test/8403__speedy__clean_g_str_pluck.wav")
 
-print("Listening... (press Ctrl+C to stop)")
-try:
-    while True:
-        data = stream.read(CHUNK, exception_on_overflow=False)
-        # Convert bytes to 16-bit integers
-        samples = struct.unpack('<' + 'h' * CHUNK, data)
+    # Convert to mono if stereo
+    if len(data.shape) > 1:
+        data = data.mean(axis=1)
 
-        # Print first 10 samples
-        print("Samples:", samples[:10])
-except KeyboardInterrupt:
-    print("Stopped.")
-finally:
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
+    # Resample if needed
+    if sample_rate != SAMPLING_RATE:
+        num_samples_total = int(len(data) * SAMPLING_RATE / sample_rate)
+        data = resample(data, num_samples_total)
+
+    # Take the first NUM_SAMPLES samples
+    audio_samples = data[:NUM_SAMPLES]
+    time = [i / SAMPLING_RATE for i in range(len(audio_samples))]
+    plt.figure(figsize=(10, 4))
+    plt.plot(time, audio_samples)
+    plt.title("Audio Samples")
+    plt.xlabel("time [seconds]")
+    plt.show()
+
+    return time, audio_samples
+
+def serial_send(time, audio_sample):
+    ser = serial.Serial('COM7', 9600, timeout=1)
+    pytime.sleep(2)  # Wait for the serial connection to initialize
+    for t, sample in zip(time, audio_sample):
+        # Convert time and sample to bytes
+        line = f"{t:.6f},{sample:.6f}\n"
+        ser.write(line.encode())
+    ser.close()
+if __name__ == "__main__":
+    time, audio_sample = audio_sampling()
+    serial_send(time, audio_sample)
+
