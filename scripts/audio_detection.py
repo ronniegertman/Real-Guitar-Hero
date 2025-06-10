@@ -33,13 +33,23 @@ def audio_sampling():
     return time, audio_samples
 
 def serial_send(time, audio_sample):
-    ser = serial.Serial('COM7', 9600, timeout=1)
+    ser = serial.Serial('COM7', 115200, timeout=1)
     pytime.sleep(2)  # Wait for the serial connection to initialize
+    start = pytime.time()
     for t, sample in zip(time, audio_sample):
         # Convert time and sample to bytes
         line = f"{t:.6f},{sample:.6f}\n"
         ser.write(line.encode())
+    print("finished sending data")
+    ser.write(b"END\n")
+    response = ser.readline().decode()
+    while response == "":
+        response = ser.readline().decode()  
+    end = pytime.time()
+    print(f"Data sent in {end - start:.2f} seconds")
+    print("Response from Arduino:", response)
     ser.close()
+    
 if __name__ == "__main__":
     time, audio_sample = audio_sampling()
     serial_send(time, audio_sample)
