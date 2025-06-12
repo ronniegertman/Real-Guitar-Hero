@@ -1,24 +1,14 @@
 #include <math.h>
-#define N 512 // number of samples
-#define SAMPLING_RATE 10000 //Hz
-
-// frequencies of notes:
-#define C4 261.63
-#define C4_SHARP 277.18
-#define D4 293.66
-#define D4_SHARP 311.13
-#define E4 329.63
-#define F4 349.23
-#define F4_SHARP 369.99
-#define G4 392.00
-#define G4_SHARP 415.30
-#define A4 440.00
-#define A4_SHARP 466.16
-#define B4 493.88
-#define C5 523.25
+#include <Arduino.h>
+#include "dsp.h"
 
 float notes[] = {
-    C4, C4_SHARP, D4, D4_SHARP, E4, F4, F4_SHARP, G4, G4_SHARP, A4, A4_SHARP, B4, C5
+    C1, C1_SHARP, D1, D1_SHARP, E1, F1, F1_SHARP, G1, G1_SHARP,
+    A1, A1_SHARP, B_1, C2, C2_SHARP, D2, D2_SHARP, E2, F2,
+    F2_SHARP, G2, G2_SHARP, A2, A2_SHARP, B2, C3, C3_SHARP,
+    D3, D3_SHARP, E3, F3, F3_SHARP, G3, G3_SHARP, A3,
+    A3_SHARP, B3, C4, C4_SHARP, D4, D4_SHARP, E4, F4,
+    F4_SHARP, G4, G4_SHARP, A4, A4_SHARP, B4, C5
 };
 
 float Goertzel(float* input, float freq){
@@ -34,7 +24,7 @@ float Goertzel(float* input, float freq){
         return 0.0f; // Frequency is above Nyquist limit
     }
     // Calculate the Goertzel algorithm coefficients
-    int bin = (int)(N * freq / SAMPLING_RATE);
+    int bin = (int)(0.5 + ((N * freq) / SAMPLING_RATE));
     float omega = 2 * M_PI * bin / N;
 
     // s[n] = x[n] + 2*cos(omega)*s[n-1] - s[n-2]
@@ -48,24 +38,29 @@ float Goertzel(float* input, float freq){
     }
 
     // Calculate the power - s[N-1]^2 + s[N-2]^2 - 2*cos(2pik/N)*s[N-1]*s[N-2]
-    float power = (s_prev_prev * s_prev_prev) + (s_prev * s_prev) - 2*cos(omega) * s_prev * s_prev_prev;
+    float power = (s_prev_prev * s_prev_prev) + (s_prev * s_prev) - 2*cos(2*omega) * s_prev * s_prev_prev;
     return power;
 
 }
 
 
 float detect_note(float* input){
+    /// @brief Detects the note in the input signal using the Goertzel algorithm
+    /// @param input Pointer to the input signal array 
+    /// @return The frequency of the detected note, or 0.0 if no note is detected
     // find the maximum amplitude
     float max_power = 0.0f;
     float max_freq = 0.0f;
-    for (int i = 0; i < 13; i++){
+    for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
         float power = Goertzel(input, notes[i]);
+        // Serial.printf("Goertzel power for %f: %f\n", notes[i], power);
         if (power > max_power) { // Threshold to detect a note
             max_power = power;
             max_freq = notes[i];
         }
     }
     return max_freq; // Return the detected frequency
-
 }
+
+
 
