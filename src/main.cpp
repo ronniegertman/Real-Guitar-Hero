@@ -10,6 +10,7 @@ using namespace std;
 
 float input_signal[N] = {0}; // Array to hold the input signal samples
 float time_signal[N] = {0};
+float detected_note = 0.0f; // Variable to hold the detected note frequency
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT); // Initialize the built-in LED pin as output
@@ -30,16 +31,16 @@ void setup() {
 }
 
 void loop() {
-  // digitalWrite(LED_BUILTIN, HIGH); // Turn the LED on
-  // delay(500);                      // Wait for 500 milliseconds
-  // digitalWrite(LED_BUILTIN, LOW);  // Turn the LED off
-  // delay(500);                      // Wait for 500 milliseconds
 
   if (Serial.available() > 0) {
     String input = Serial.readStringUntil('\n'); // Read input until newline
 
     if (input == "END"){
-      Serial.printf("Note detected: %f\n", detect_note(input_signal));
+      // start a timer
+      unsigned long startTime = millis(); // Record start time
+      detected_note = detect_note(input_signal);
+      unsigned long elapsed = millis() - startTime; // Elapsed time in ms
+      Serial.printf("Note detected: %f in time %f\n", detected_note, elapsed);
       return; // Exit the loop if "END" is received
     }
 

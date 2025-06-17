@@ -10,7 +10,7 @@ SAMPLING_RATE = 10000  # Desired sampling rate in Hz
 
 def audio_sampling():
     # Read WAV file (returns sample_rate, data)
-    sample_rate, data = wav.read("../test/8403__speedy__clean_g_str_pluck.wav")
+    sample_rate, data = wav.read("../test/8382__speedy__clean_a_str_pick.wav")
 
     # Convert to mono if stereo
     if len(data.shape) > 1:

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <math.h>
 #include <Arduino.h>
 #include "dsp.h"
@@ -51,7 +52,7 @@ float detect_note(float* input){
     // find the maximum amplitude
     float max_power = 0.0f;
     float max_freq = 0.0f;
-    for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
+    for (int i = 0; i < 48; i++){
         float power = Goertzel(input, notes[i]);
         // Serial.printf("Goertzel power for %f: %f\n", notes[i], power);
         if (power > max_power) { // Threshold to detect a note
@@ -62,5 +63,25 @@ float detect_note(float* input){
     return max_freq; // Return the detected frequency
 }
 
+float* core_freqs(float* input){
+    /// @brief Detects the core frequencies in the input signal using the Goertzel algorithm
+    /// @param input Pointer to the input signal array
+    /// @return An array of detected core frequencies, or an empty array if no frequencies are detected
+    float goertzel_powers[48] = {0.0f}; // Array to hold Goertzel powers for each note
 
+    float core_freqs[6] = {0.0f}; 
+    for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
+        goertzel_powers[i] = Goertzel(input, notes[i]);
+    }
+    std::sort(goertzel_powers, goertzel_powers + 48); // Sort powers in descending order
+    // Select the top 6 frequencies with the highest powers
+    for (int i = 0; i < 6; i++) {
+        if (goertzel_powers[47 - i] > 0.0f) { // Check if the power is above a threshold
+            core_freqs[i] = notes[47 - i]; // Store the corresponding frequency
+        } else {
+            core_freqs[i] = 0.0f; // If no frequency detected, set to 0
+        }
+    }
+    return core_freqs; // Return the array of detected core frequencies
+}
 
