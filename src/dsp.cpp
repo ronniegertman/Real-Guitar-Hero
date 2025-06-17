@@ -73,7 +73,7 @@ float* core_freqs(float* input){
     for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
         goertzel_powers[i] = Goertzel(input, notes[i]);
     }
-    std::sort(goertzel_powers, goertzel_powers + 48); // Sort powers in descending order
+    std::sort(goertzel_powers, goertzel_powers + 48); 
     // Select the top 6 frequencies with the highest powers
     for (int i = 0; i < 6; i++) {
         if (goertzel_powers[47 - i] > 0.0f) { // Check if the power is above a threshold
