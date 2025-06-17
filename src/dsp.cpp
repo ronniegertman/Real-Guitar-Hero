@@ -63,6 +63,12 @@ float detect_note(float* input){
     return max_freq; // Return the detected frequency
 }
 
+
+bool compareDescending(float a, float b) {
+    return a > b; // Descending: larger values come first
+}
+
+
 float* core_freqs(float* input){
     /// @brief Detects the core frequencies in the input signal using the Goertzel algorithm
     /// @param input Pointer to the input signal array
@@ -73,15 +79,7 @@ float* core_freqs(float* input){
     for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
         goertzel_powers[i] = Goertzel(input, notes[i]);
     }
-    std::sort(goertzel_powers, goertzel_powers + 48); 
-    // Select the top 6 frequencies with the highest powers
-    for (int i = 0; i < 6; i++) {
-        if (goertzel_powers[47 - i] > 0.0f) { // Check if the power is above a threshold
-            core_freqs[i] = notes[47 - i]; // Store the corresponding frequency
-        } else {
-            core_freqs[i] = 0.0f; // If no frequency detected, set to 0
-        }
-    }
-    return core_freqs; // Return the array of detected core frequencies
+    std::sort(goertzel_powers, goertzel_powers + 48, compareDescending); // Sort the powers in descending order
+    return goertzel_powers;
 }
 
