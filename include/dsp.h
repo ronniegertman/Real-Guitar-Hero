@@ -1,7 +1,16 @@
 #pragma once
 
+class Goertzel_item{
+    public:
+        float freq;
+        float power;
+};
+
+
 float Goertzel(float* input, float freq);
 float detect_note(float* input);
+void core_freqs(float* input, Goertzel_item* goertzel_powers);
+
 #define N 512 // number of samples
 #define SAMPLING_RATE 10000 //Hz
 
@@ -55,3 +64,5 @@ float detect_note(float* input);
 #define A4_SHARP 466.16
 #define B4 493.88
 #define C5 523.25
+
+

@@ -11,6 +11,7 @@ using namespace std;
 float input_signal[N] = {0}; // Array to hold the input signal samples
 float time_signal[N] = {0};
 float detected_note = 0.0f; // Variable to hold the detected note frequency
+Goertzel_item amps[48];
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT); // Initialize the built-in LED pin as output
@@ -36,12 +37,13 @@ void loop() {
     String input = Serial.readStringUntil('\n'); // Read input until newline
 
     if (input == "END"){
-      // start a timer
-      unsigned long startTime = millis(); // Record start time
-      detected_note = detect_note(input_signal);
-      unsigned long elapsed = millis() - startTime; // Elapsed time in ms
-      Serial.printf("Note detected: %f in time %f\n", detected_note, elapsed);
-      return; // Exit the loop if "END" is received
+      // unsigned long startTime = millis(); // Record start time
+      // detected_note = detect_note(input_signal);
+      // unsigned long elapsed = millis() - startTime; // Elapsed time in ms
+      // Serial.printf("Note detected: %f in time %f\n", detected_note, elapsed);
+      core_freqs(input_signal, amps);
+      Serial.printf("Core frequencies detected: (%f, %f), (%f,%f), %f, %f, %f, %f\n", amps[0].freq, amps[0].power, amps[1].freq, amps[1].power, amps[2].freq, amps[3].freq, amps[4].freq, amps[5].freq);
+      return; 
     }
 
     int comma_index = input.indexOf(',');
