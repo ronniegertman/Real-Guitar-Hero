@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 import serial
 import time as pytime
 
-NUM_SAMPLES = 512
-SAMPLING_RATE = 10000  # Desired sampling rate in Hz
+NUM_SAMPLES = 1024
+SAMPLING_RATE = 5120  # Desired sampling rate in Hz
 
 def audio_sampling():
     # Read WAV file (returns sample_rate, data)
-    sample_rate, data = wav.read("../test/8385__speedy__clean_b_str_pick.wav")
+    sample_rate, data = wav.read("../test/a.wav")
 
     # Convert to mono if stereo
     if len(data.shape) > 1:
@@ -21,8 +21,9 @@ def audio_sampling():
         num_samples_total = int(len(data) * SAMPLING_RATE / sample_rate)
         data = resample(data, num_samples_total)
 
-    # Take the first NUM_SAMPLES samples
-    audio_samples = data[NUM_SAMPLES*4:NUM_SAMPLES*5]
+    # Take the last NUM_SAMPLES samples
+    audio_samples = data[-NUM_SAMPLES:]
+    # audio_samples = data[NUM_SAMPLES*4:NUM_SAMPLES*5]
     time = [i / SAMPLING_RATE for i in range(len(audio_samples))]
     plt.figure(figsize=(10, 4))
     plt.plot(time, audio_samples)

@@ -4,14 +4,22 @@
 #include "dsp.h"
 
 
+// float notes[] = {
+//     C1, C1_SHARP, D1, D1_SHARP, E1, F1, F1_SHARP, G1, G1_SHARP,
+//     A1, A1_SHARP, B_1, C2, C2_SHARP, D2, D2_SHARP, E2, F2,
+//     F2_SHARP, G2, G2_SHARP, A2, A2_SHARP, B2, C3, C3_SHARP,
+//     D3, D3_SHARP, E3, F3, F3_SHARP, G3, G3_SHARP, A3,
+//     A3_SHARP, B3, C4, C4_SHARP, D4, D4_SHARP, E4, F4,
+//     F4_SHARP, G4, G4_SHARP, A4, A4_SHARP, B4, C5
+// };
 float notes[] = {
-    C1, C1_SHARP, D1, D1_SHARP, E1, F1, F1_SHARP, G1, G1_SHARP,
-    A1, A1_SHARP, B_1, C2, C2_SHARP, D2, D2_SHARP, E2, F2,
+    C2, C2_SHARP, D2, D2_SHARP, E2, F2,
     F2_SHARP, G2, G2_SHARP, A2, A2_SHARP, B2, C3, C3_SHARP,
     D3, D3_SHARP, E3, F3, F3_SHARP, G3, G3_SHARP, A3,
     A3_SHARP, B3, C4, C4_SHARP, D4, D4_SHARP, E4, F4,
-    F4_SHARP, G4, G4_SHARP, A4, A4_SHARP, B4, C5
-};
+    F4_SHARP, G4, G4_SHARP, A4, A4_SHARP, B4, C5, C5_SHARP,
+    D5, D5_SHARP, E5, F5, F5_SHARP, G5, G5_SHARP, A5,
+    A5_SHARP, B5, C6, C6_SHARP, D6, D6_SHARP, E6};
 
 float Goertzel(float* input, float freq){
     /// @brief Goertzel algorithm for detecting a specific frequency in a signal
@@ -80,6 +88,6 @@ void core_freqs(float* input, Goertzel_item* goertzel_powers){
         goertzel_powers[i].freq = notes[i]; 
         goertzel_powers[i].power = Goertzel(input, notes[i]); 
     }
-    std::sort(goertzel_powers, goertzel_powers + 48, compareDescending); // Sort the powers in descending order
+    std::sort(goertzel_powers, goertzel_powers + 36, compareDescending); // Sort the powers in descending order
 }
 
