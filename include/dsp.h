@@ -13,7 +13,7 @@ void core_freqs(float* input, Goertzel_item* goertzel_powers);
 
 // #define N 512 // number of samples
 // #define SAMPLING_RATE 10000 //Hz
-#define N 1024 // number of samples
+#define N 2048 // number of samples
 #define SAMPLING_RATE 5120 //Hz
 
 // frequencies of notes:

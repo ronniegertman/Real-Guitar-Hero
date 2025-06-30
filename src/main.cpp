@@ -30,17 +30,24 @@ void setup() {
   // Serial.printf("Note detected: %f\n", detect_note(sineWave));
 
 }
-
+bool first_time = true;
+float start_time = 0.0f;
+float end_time = 0.0f;
 void loop() {
 
   if (Serial.available() > 0) {
+    if (first_time){
+      first_time = false;
+      start_time = millis() / 1000.0f; // Record the start time in seconds
+    }
     String input = Serial.readStringUntil('\n'); // Read input until newline
 
-    if (input == "END"){
+    if (input == "END"){ 
+      end_time = millis() / 1000.0f; // Record the end time in seconds
       detected_note = detect_note(input_signal);
-      Serial.printf("Note detected: %f in time ", detected_note);
-      core_freqs(input_signal, amps);
-      Serial.printf("Core frequencies detected: (%f, %f), (%f,%f), (%f, %f), (%f, %f), (%f, %f), (%f, %f)\n", amps[0].freq, amps[0].power, amps[1].freq, amps[1].power, amps[2].freq, amps[2].power, amps[3].freq, amps[3].power, amps[4].freq, amps[4].power, amps[5].freq, amps[5].power);
+      Serial.printf("Note detected: %f, data sent in time %f\n", detected_note, (end_time - start_time));
+      // core_freqs(input_signal, amps);
+      // Serial.printf("Core frequencies detected: (%f, %f), (%f,%f), (%f, %f), (%f, %f), (%f, %f), (%f, %f)\n", amps[0].freq, amps[0].power, amps[1].freq, amps[1].power, amps[2].freq, amps[2].power, amps[3].freq, amps[3].power, amps[4].freq, amps[4].power, amps[5].freq, amps[5].power);
       return; 
     }
 

@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 import serial
 import time as pytime
 
-NUM_SAMPLES = 1024
+NUM_SAMPLES = 2048
 SAMPLING_RATE = 5120  # Desired sampling rate in Hz
 
 def audio_sampling():
     # Read WAV file (returns sample_rate, data)
-    sample_rate, data = wav.read("../test/a.wav")
+    sample_rate, data = wav.read("../test/g.wav")
 
     # Convert to mono if stereo
     if len(data.shape) > 1:
