@@ -1,18 +1,5 @@
 #pragma once
 
-class Goertzel_item{
-    public:
-        float freq;
-        float power;
-};
-
-
-float Goertzel(float* input, float freq);
-float detect_note(float* input);
-void core_freqs(float* input, Goertzel_item* goertzel_powers);
-
-// #define N 512 // number of samples
-// #define SAMPLING_RATE 10000 //Hz
 #define N 2048 // number of samples
 #define SAMPLING_RATE 5120 //Hz
 
@@ -82,5 +69,32 @@ void core_freqs(float* input, Goertzel_item* goertzel_powers);
 #define D6 1174.66
 #define D6_SHARP 1244.51
 #define E6 1318.51
+
+struct Goertzel_item{
+    float freq;
+    float power;
+};
+
+class DSP {
+    public:
+    static float Goertzel(float* input, float freq ,float s_prev=0, float s_prev_prev=0);
+};
+
+class NoteDetector {
+    public:
+        static const float notes[49] = {
+        E2, F2, F2_SHARP, G2, G2_SHARP, A2, A2_SHARP, B2, C3, C3_SHARP,
+        D3, D3_SHARP, E3, F3, F3_SHARP, G3, G3_SHARP, A3,
+        A3_SHARP, B3, C4, C4_SHARP, D4, D4_SHARP, E4, F4,
+        F4_SHARP, G4, G4_SHARP, A4, A4_SHARP, B4, C5, C5_SHARP,
+        D5, D5_SHARP, E5, F5, F5_SHARP, G5, G5_SHARP, A5,
+        A5_SHARP, B5, C6, C6_SHARP, D6, D6_SHARP, E6
+        };
+
+        float detect_note(float* input);
+        static void core_freqs(float* input, Goertzel_item* goertzel_powers, int len=36);
+        static bool correct_detection(float note_to_play, Goertzel_item* goertzel_powers);
+
+};
 
 
