@@ -82,7 +82,7 @@ class DSP {
 
 class NoteDetector {
     public:
-        static const float notes[49] = {
+        static constexpr float notes[49] = {
         E2, F2, F2_SHARP, G2, G2_SHARP, A2, A2_SHARP, B2, C3, C3_SHARP,
         D3, D3_SHARP, E3, F3, F3_SHARP, G3, G3_SHARP, A3,
         A3_SHARP, B3, C4, C4_SHARP, D4, D4_SHARP, E4, F4,

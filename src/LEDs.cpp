@@ -1,4 +1,22 @@
 #include "LEDs.h"
+#include <Adafruit_NeoPixel.h>
+
+// Ensure these macros are defined before use, or include the header where they are defined
+#ifndef NUM_PIXELS
+#define NUM_PIXELS 60 
+#endif
+
+#ifndef PIN_WS2812B
+#define PIN_WS2812B 6 
+#endif
+
+#ifndef NUM_ROWS
+#define NUM_ROWS 6 // or your actual number of rows
+#endif
+
+#ifndef NUM_COLS
+#define NUM_COLS 24 // or your actual number of columns
+#endif
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
@@ -6,8 +24,6 @@ extern int parsedE[], parsedB[], parsedG[], parsedD[], parsedA[], parsedLowE[];
 extern int lenE, lenB, lenG, lenD, lenA, lenLowE;
 
 extern int step;
-extern Adafruit_NeoPixel ws2812b;
-extern uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
 // Parsed fret arrays
 int parsedE[MAX_TAB_LENGTH]; int lenE = 0;
 int parsedB[MAX_TAB_LENGTH]; int lenB = 0;

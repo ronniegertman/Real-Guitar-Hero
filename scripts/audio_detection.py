@@ -26,7 +26,7 @@ def audio_sampling():
     # audio_samples = data[NUM_SAMPLES*4:NUM_SAMPLES*5]
     time = [i / SAMPLING_RATE for i in range(len(audio_samples))]
     plt.figure(figsize=(10, 4))
-    plt.plot(time, audio_samples)
+    plt.plot(time, data[-NUM_SAMPLES:], label='Audio Signal')
     plt.title("Audio Samples")
     plt.xlabel("time [seconds]")
     plt.show()

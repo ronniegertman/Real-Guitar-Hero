@@ -8,7 +8,7 @@
 #include <vector>   // for std::vector
 #include <cctype>   // for isdigit
 #include "dsp.h" 
-#include "guitar.h" 
+#include "LEDs.h" 
 #include <iostream>
 #include <fstream>
 
@@ -20,13 +20,13 @@
 
 class GuitarTab {
     public:
-        int freq;
+        float freq;
         int led_index;
 };
 
 class Guitar {
     public:
-    static const GuitarTab guitar_tabs[6][13] = {
+    static constexpr GuitarTab guitar_tabs[6][13] = {
         { {E2, 5}, {F2, 10}, {F2_SHARP, 21}, {G2, 26}, {G2_SHARP, 37}, {A2, 42}, {A2_SHARP, 53}, {B2, 58}, {C3, 69}, {C3_SHARP, 74}, {D3, 85}, {D3_SHARP, 90}, {E3, 101} },
         { {A2, 4}, {A2_SHARP, 11}, {B2, 20}, {C3, 27}, {C3_SHARP, 36}, {D3, 43}, {D3_SHARP, 52}, {E3, 59}, {F3, 68}, {F3_SHARP, 75}, {G3, 84}, {G3_SHARP, 91}, {A3, 100} },
         { {D3, 3}, {D3_SHARP, 12}, {E3, 19}, {F3, 28}, {F3_SHARP, 35}, {G3, 44}, {G3_SHARP, 51}, {A3, 60}, {A3_SHARP, 67}, {B3, 76}, {C4, 83}, {C4_SHARP, 92}, {D4, 99} },

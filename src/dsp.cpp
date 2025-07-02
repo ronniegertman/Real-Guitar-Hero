@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "dsp.h"
 
-float DSP::Goertzel(float* input, float freq ,float s_prev=0, float s_prev_prev=0){
+float DSP::Goertzel(float* input, float freq, float s_prev, float s_prev_prev){
     /// @brief Goertzel algorithm for detecting a specific frequency in a signal
     /// @param input Pointer to the input signal array
     /// @param freq Frequency to detect in the input signal
@@ -34,7 +34,6 @@ float DSP::Goertzel(float* input, float freq ,float s_prev=0, float s_prev_prev=
     return power;
 
 }
-
 
 
 float NoteDetector::detect_note(float* input){
@@ -71,7 +70,7 @@ void NoteDetector::core_freqs(float* input, Goertzel_item* goertzel_powers, int 
     float core_freqs[6] = {0.0f}; 
     for (int i = 0; i < sizeof(NoteDetector::notes) / sizeof(NoteDetector::notes[0]); i++){
         goertzel_powers[i].freq = NoteDetector::notes[i]; 
-        goertzel_powers[i].power = Goertzel(input, NoteDetector::notes[i]); 
+        goertzel_powers[i].power = DSP::Goertzel(input, NoteDetector::notes[i]);
     }
     std::sort(goertzel_powers, goertzel_powers + len, compareDescending); // Sort the powers in descending order
 }
