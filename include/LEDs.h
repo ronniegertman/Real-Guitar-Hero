@@ -17,6 +17,7 @@
 #define NUM_PIXELS  (NUM_ROWS * NUM_COLS)
 #define PIN_WS2812B D1
 #define MAX_TAB_LENGTH 1000
+#define NUM_STRINGS 6
 
 class GuitarTab {
     public:
@@ -46,7 +47,9 @@ class Guitar {
                          std::string& line_E);
     static void parseTabLine(const std::string& line, int* output, int& length); 
     void displayStep(int current_step); // we don't use this anymore
-    void getSongSteps(GuitarTab* output, int length);
+    void getSongSteps(const int parsedLowE[], const int parsedA[], const int parsedD[], 
+                  const int parsedG[], const int parsedB[], const int parsedHiE[], 
+                  int length, GuitarTab output[NUM_STRINGS][MAX_TAB_LENGTH]);
 
 }
 

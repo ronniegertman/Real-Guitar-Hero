@@ -3,27 +3,24 @@
 
 // Ensure these macros are defined before use, or include the header where they are defined
 #ifndef NUM_PIXELS
-#define NUM_PIXELS 60 
+#define NUM_PIXELS (NUM_COLS*NUM_ROWS)
 #endif
 
 #ifndef PIN_WS2812B
-#define PIN_WS2812B 6 
+#define PIN_WS2812B D1 
 #endif
 
 #ifndef NUM_ROWS
-#define NUM_ROWS 6 // or your actual number of rows
+#define NUM_ROWS 8 // or your actual number of rows
 #endif
 
 #ifndef NUM_COLS
-#define NUM_COLS 24 // or your actual number of columns
+#define NUM_COLS 13 // or your actual number of columns
 #endif
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
-extern int parsedE[], parsedB[], parsedG[], parsedD[], parsedA[], parsedLowE[];
-extern int lenE, lenB, lenG, lenD, lenA, lenLowE;
 
-extern int step;
 // Parsed fret arrays
 int parsedE[MAX_TAB_LENGTH]; int lenE = 0;
 int parsedB[MAX_TAB_LENGTH]; int lenB = 0;
@@ -32,6 +29,8 @@ int parsedD[MAX_TAB_LENGTH]; int lenD = 0;
 int parsedA[MAX_TAB_LENGTH]; int lenA = 0;
 int parsedLowE[MAX_TAB_LENGTH]; int lenLowE = 0;
 int step = 0;
+
+GuitarTab songNotes[NUM_STRINGS][MAX_TAB_LENGTH];
 
 int Guitar::matrixIndex(int row, int col) {
   if (col % 2 == 0)
@@ -137,39 +136,55 @@ bool Guitar::loadFullTabFromFile(const std::string& filename,
     return true;
 }
 
-void Guitar::getSongSteps(GuitarTab* output, int length) {
-// output should be an array of 6 strings tabs. 
-//if there are no notes to play, don't add anything to the array.
-    for (int i = 0; i< MAX_TAB_LENGTH; i++){
-        if(parsedLowE[i] >= 0 && i < length) {
-            int x = 0;
-            int y = parsedLowE[i];
-            output[i] = guitar_tabs[x][y];
-        }
-        if(parsedA[i] >= 0 && i < length) {
-            int x = 1;
-            int y = parsedA[i];
-            output[i] = guitar_tabs[x][y];
-        }
-        if(parsedD[i] >= 0 && i < length) {
-            int x = 2;
-            int y = parsedD[i];
-            output[i] = guitar_tabs[x][y];
-        }
-        if(parsedG[i] >= 0 && i < length) {
-            int x = 3;
-            int y = parsedG[i];
-            output[i] = guitar_tabs[x][y];
-        }
-        if(parsedB[i] >= 0 && i < length) {
-            int x = 4;
-            int y = parsedB[i];
-            output[i] = guitar_tabs[x][y];
-        }
-        if(parsedE[i] >= 0 && i < length) {
-            int x = 5;
-            int y = parsedE[i];
-            output[i] = guitar_tabs[x][y];
+
+
+
+void Guitar::getSongSteps(const int parsedLowE[], const int parsedA[], const int parsedD[], 
+                  const int parsedG[], const int parsedB[], const int parsedHiE[], 
+                  int length, GuitarTab output[NUM_STRINGS][MAX_TAB_LENGTH]) {
+    
+    length = std::min(length, MAX_TAB_LENGTH);
+    
+    // Initialize output array
+    for (int s = 0; s < NUM_STRINGS; ++s) {
+        for (int i = 0; i < MAX_TAB_LENGTH; ++i) {
+            output[s][i].freq = -1;
+            output[s][i].led_index = -1;
         }
     }
+    
+    // Array of pointers to parsed arrays for easier iteration
+    const int* parsedArrays[NUM_STRINGS] = {parsedLowE, parsedA, parsedD, parsedG, parsedB, parsedHiE};
+    
+    int outputIndex = 0; // Track where to write in the output array
+    
+    for (int i = 0; i < length; ++i) {
+        // Check if all strings at position i are -1
+        bool allEmpty = true;
+        for (int s = 0; s < NUM_STRINGS; ++s) {
+            if (parsedArrays[s][i] >= 0) {
+                allEmpty = false;
+                break;
+            }
+        }
+        
+        // If not all empty, copy this step to the output
+        if (!allEmpty) {
+            for (int s = 0; s < NUM_STRINGS; ++s) {
+                if (parsedArrays[s][i] >= 0) {
+                    output[s][outputIndex] = guitar_tabs[s][parsedArrays[s][i]];
+                }
+                // If parsedArrays[s][i] is -1, output[s][outputIndex] remains initialized to -1
+            }
+            outputIndex++;
+            
+            // Stop if we've filled the output array
+            if (outputIndex >= MAX_TAB_LENGTH) {
+                break;
+            }
+        }
+        // If all empty (all -1), skip this step entirely
+    }
 }
+
+
