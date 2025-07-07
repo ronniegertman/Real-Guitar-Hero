@@ -2,12 +2,14 @@
 #include "dsp.h"
 #include <Math.h>
 #include <bits/stdc++.h>
+
 using namespace std;
 
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 2
 #endif
 
+DSP dsp;
 float input_signal[N] = {0}; // Array to hold the input signal samples
 float time_signal[N] = {0};
 float detected_note = 0.0f; // Variable to hold the detected note frequency
@@ -16,23 +18,12 @@ Goertzel_item amps[36];
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT); // Initialize the built-in LED pin as output
   Serial.begin(115200);         // Start serial communication at 115200 baud rate
-  // Generate a sine wave with a frequency of 440 Hz
-  // float frequency = F4; // Frequency in Hz
-  // float sampleRate = 10000; // Sample rate in Hz
-  // int numSamples = 512; // Number of samples to generate
-  // float sineWave[numSamples];
-  // for (int i = 0; i < numSamples; i++) {
-  //   sineWave[i] = sin(2 * M_PI * frequency * i / sampleRate);
-  // }
-  // delay(1000);
-  // Serial.printf("Goertzel power: %f\n", Goertzel(sineWave, frequency));
-  // Serial.printf("Goertzel power: %f\n", Goertzel(sineWave, frequency * 2));
-  // Serial.printf("Note detected: %f\n", detect_note(sineWave));
-
 }
+
 bool first_time = true;
 float start_time = 0.0f;
 float end_time = 0.0f;
+
 void loop() {
 
   if (Serial.available() > 0) {
@@ -44,7 +35,7 @@ void loop() {
 
     if (input == "END"){ 
       end_time = millis() / 1000.0f; // Record the end time in seconds
-      detected_note = detect_note(input_signal);
+      detected_note = dsp.detect_note(input_signal);
       Serial.printf("Note detected: %f, data sent in time %f\n", detected_note, (end_time - start_time));
       // core_freqs(input_signal, amps);
       // Serial.printf("Core frequencies detected: (%f, %f), (%f,%f), (%f, %f), (%f, %f), (%f, %f), (%f, %f)\n", amps[0].freq, amps[0].power, amps[1].freq, amps[1].power, amps[2].freq, amps[2].power, amps[3].freq, amps[3].power, amps[4].freq, amps[4].power, amps[5].freq, amps[5].power);

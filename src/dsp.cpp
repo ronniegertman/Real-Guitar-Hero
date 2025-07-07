@@ -3,18 +3,9 @@
 #include <Arduino.h>
 #include "dsp.h"
 
-class DSP{
-    public:
-    float notes[49] = {
-    E2, F2, F2_SHARP, G2, G2_SHARP, A2, A2_SHARP, B2, C3, C3_SHARP,
-    D3, D3_SHARP, E3, F3, F3_SHARP, G3, G3_SHARP, A3,
-    A3_SHARP, B3, C4, C4_SHARP, D4, D4_SHARP, E4, F4,
-    F4_SHARP, G4, G4_SHARP, A4, A4_SHARP, B4, C5, C5_SHARP,
-    D5, D5_SHARP, E5, F5, F5_SHARP, G5, G5_SHARP, A5,
-    A5_SHARP, B5, C6, C6_SHARP, D6, D6_SHARP, E6
-};
 
-float Goertzel(float* input, float freq ,float s_prev=0, float s_prev_prev=0){
+
+float DSP::Goertzel(float* input, float freq ,float s_prev, float s_prev_prev){
     /// @brief Goertzel algorithm for detecting a specific frequency in a signal
     /// @param input Pointer to the input signal array
     /// @param freq Frequency to detect in the input signal
@@ -46,7 +37,7 @@ float Goertzel(float* input, float freq ,float s_prev=0, float s_prev_prev=0){
 
 }
 
-float detect_note(float* input){
+float DSP::detect_note(float* input){
     /// @brief Detects the note in the input signal using the Goertzel algorithm
     /// @param input Pointer to the input signal array 
     /// @return The frequency of the detected note, or 0.0 if no note is detected
@@ -64,11 +55,11 @@ float detect_note(float* input){
     return max_freq; // Return the detected frequency
 }
 
- bool compareDescending(Goertzel_item &a, Goertzel_item &b) {
+ static bool compareDescending(Goertzel_item &a, Goertzel_item &b) {
     return a.power > b.power; // Descending: larger values come first
 }
 
-void core_freqs(float* input, Goertzel_item* goertzel_powers){
+void DSP::core_freqs(float* input, Goertzel_item* goertzel_powers){
     /// @brief Detects the core frequencies in the input signal using the Goertzel algorithm
     /// @param input Pointer to the input signal array
     /// @return An array of detected core frequencies, or an empty array if no frequencies are detected
@@ -76,12 +67,12 @@ void core_freqs(float* input, Goertzel_item* goertzel_powers){
     float core_freqs[6] = {0.0f}; 
     for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
         goertzel_powers[i].freq = notes[i]; 
-        goertzel_powers[i].power = Goertzel(input, notes[i]); 
+        goertzel_powers[i].power = DSP::Goertzel(input, notes[i]); 
     }
     std::sort(goertzel_powers, goertzel_powers + 36, compareDescending); // Sort the powers in descending order
 }
 
-bool correct_detection(float note_to_play, Goertzel_item* goertzel_powers){
+bool DSP::correct_detection(float note_to_play, Goertzel_item* goertzel_powers){
     /// @brief Checks if the detected note is a valid note
     /// @param detected_note The frequency of the detected note
     /// @return True if the detected note is a valid note, false otherwise
@@ -98,5 +89,5 @@ bool correct_detection(float note_to_play, Goertzel_item* goertzel_powers){
 
     return false; 
 }
-};
+
 
