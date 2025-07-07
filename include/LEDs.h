@@ -19,9 +19,9 @@
 #define MAX_TAB_LENGTH 1000
 #define NUM_STRINGS 6
 
-uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
+extern uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
 
-Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
+extern Adafruit_NeoPixel ws2812b;
 
 class GuitarTab {
     public:

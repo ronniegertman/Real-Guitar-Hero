@@ -18,7 +18,7 @@
 #define NUM_COLS 13 // or your actual number of columns
 #endif
 
-
+Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 // Parsed fret arrays
 int parsedE[MAX_TAB_LENGTH]; int lenE = 0;
 int parsedB[MAX_TAB_LENGTH]; int lenB = 0;
@@ -37,10 +37,6 @@ const GuitarTab Guitar::guitar_tabs[6][13] = {
     { {E4, 0}, {F4, 15}, {F4_SHARP, 16}, {G4, 31}, {G4_SHARP, 32}, {A4, 47}, {A4_SHARP, 48}, {B4, 63}, {C5, 64}, {C5_SHARP, 79}, {D5, 80}, {D5_SHARP, 95}, {E5, 96} }
 };
 GuitarTab songNotes[NUM_STRINGS][MAX_TAB_LENGTH];
-
-void setup() {
-    ws2812b.begin();//leds initialization, probably better put this in the esp32 start.
-} 
 
 
 int Guitar::matrixIndex(int row, int col) {

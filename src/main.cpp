@@ -1,96 +1,56 @@
-#include <algorithm>
-#include <math.h>
 #include <Arduino.h>
 #include "dsp.h"
+#include <Math.h>
+#include <bits/stdc++.h>
+#include "LEDs.h"
+using namespace std;
 
-float DSP::Goertzel(float* input, float freq, float s_prev, float s_prev_prev){
-    /// @brief Goertzel algorithm for detecting a specific frequency in a signal
-    /// @param input Pointer to the input signal array
-    /// @param freq Frequency to detect in the input signal
-    /// @param s_prev Previous sample value (optional, default is 0)
-    /// @param s_prev_prev Previous previous sample value (optional, default is 0)
-    /// @return The Goertzel algorithm power result for the specified frequency
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 2
+#endif
 
-    if (input == nullptr || freq <= 0) {
-        return 0.0f; // Invalid input or frequency
-    }
-    if (freq > SAMPLING_RATE / 2) {
-        return 0.0f; // Frequency is above Nyquist limit
-    }
-    // Calculate the Goertzel algorithm coefficients
-    int bin = (int)(0.5 + ((N * freq) / SAMPLING_RATE));
-    float omega = 2 * M_PI * bin / N;
+float input_signal[N] = {0}; // Array to hold the input signal samples
+float time_signal[N] = {0};
+float detected_note = 0.0f; // Variable to hold the detected note frequency
+Goertzel_item amps[36];
+NoteDetector noteDetector; // Create an instance of NoteDetector
 
-    // s[n] = x[n] + 2*cos(omega)*s[n-1] - s[n-2]
-    float s = 0.0f;
-    for (int i=0; i<N; i++){
-        s = input[i] + 2*cos(omega)*s_prev - s_prev_prev;
-        s_prev_prev = s_prev;
-        s_prev = s;
-    }
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT); // Initialize the built-in LED pin as output
+  Serial.begin(115200);         // Start serial communication at 115200 baud rate
+  ws2812b.begin();//leds initialization, probably better put this in the esp32 setup
 
-    // Calculate the power - s[N-1]^2 + s[N-2]^2 - 2*cos(2pik/N)*s[N-1]*s[N-2]
-    float power = (s_prev_prev * s_prev_prev) + (s_prev * s_prev) - 2*cos(2*omega) * s_prev * s_prev_prev;
-    return power;
 
 }
+bool first_time = true;
+float start_time = 0.0f;
+float end_time = 0.0f;
+void loop() {
 
-
-float NoteDetector::detect_note(float* input){
-    /// @brief Detects the note in the input signal using the Goertzel algorithm
-    /// @param input Pointer to the input signal array 
-    /// @return The frequency of the detected note, or 0.0 if no note is detected
-    // find the maximum amplitude
-    float max_power = 0.0f;
-    float max_freq = 0.0f;
-    for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
-        float power = DSP::Goertzel(input, NoteDetector::notes[i]);
-        // Serial.printf("Goertzel power for %f: %f\n", notes[i], power);
-        if (power > max_power) { // Threshold to detect a note
-            max_power = power;
-            max_freq = notes[i];
-        }
+  if (Serial.available() > 0) {
+    if (first_time){
+      first_time = false;
+      start_time = millis() / 1000.0f; // Record the start time in seconds
     }
-    return max_freq; // Return the detected frequency
-}
+    String input = Serial.readStringUntil('\n'); // Read input until newline
 
- bool compareDescending(Goertzel_item &a, Goertzel_item &b) {
-    return a.power > b.power; // Descending: larger values come first
-}
-
-
-
-void NoteDetector::core_freqs(float* input, Goertzel_item* goertzel_powers, int len){
-    /// @brief Detects the core frequencies in the input signal using the Goertzel algorithm
-    /// @param input Pointer to the input signal array
-    /// @param goertzel_powers Pointer to an array of Goertzel_item to store the detected frequencies and their powers
-    /// @param len The length of the goertzel_powers array (default is 36)
-    /// @return An array of detected core frequencies, or an empty array if no frequencies are detected
-
-    float core_freqs[6] = {0.0f}; 
-    for (int i = 0; i < sizeof(NoteDetector::notes) / sizeof(NoteDetector::notes[0]); i++){
-        goertzel_powers[i].freq = NoteDetector::notes[i]; 
-        goertzel_powers[i].power = DSP::Goertzel(input, NoteDetector::notes[i]);
-    }
-    std::sort(goertzel_powers, goertzel_powers + len, compareDescending); // Sort the powers in descending order
-}
-
-
-
-bool NoteDetector::correct_detection(float note_to_play, Goertzel_item* goertzel_powers){
-    /// @brief Checks if the detected note is a valid note
-    /// @param detected_note The frequency of the detected note
-    /// @return True if the detected note is a valid note, false otherwise
-
-    if (goertzel_powers[0].freq == note_to_play || goertzel_powers[1].freq == note_to_play){ 
-        return true; 
+    if (input == "END"){ 
+      detected_note = noteDetector.detect_note(input_signal);
+      Serial.printf("Note detected: %f, data sent in time %f\n", detected_note, (end_time - start_time));
+      // core_freqs(input_signal, amps);
+      // Serial.printf("Core frequencies detected: (%f, %f), (%f,%f), (%f, %f), (%f, %f), (%f, %f), (%f, %f)\n", amps[0].freq, amps[0].power, amps[1].freq, amps[1].power, amps[2].freq, amps[2].power, amps[3].freq, amps[3].power, amps[4].freq, amps[4].power, amps[5].freq, amps[5].power);
+      return; 
     }
 
-    // if we didn't find, check for higher octaves of the same note
-    if (goertzel_powers[0].freq == note_to_play * 2 || goertzel_powers[1].freq == note_to_play * 2
-    || goertzel_powers[0].freq == note_to_play / 2 || goertzel_powers[1].freq == note_to_play / 2){ 
-        return true; 
-    }
+    int comma_index = input.indexOf(',');
+    String time_str = input.substring(0, comma_index); // Extract time part
+    String sample_str = input.substring(comma_index + 1); // Extract sample part
 
-    return false; 
+    float time = time_str.toFloat(); 
+    float sample = sample_str.toFloat();
+
+    input_signal[(int)(time * SAMPLING_RATE) % N] = sample;
+    time_signal[(int)(time * SAMPLING_RATE) % N] = time;
+    
+  }
 }

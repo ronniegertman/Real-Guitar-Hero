@@ -75,7 +75,7 @@ void NoteDetector::core_freqs(float* input, Goertzel_item* goertzel_powers, int 
     std::sort(goertzel_powers, goertzel_powers + len, compareDescending); // Sort the powers in descending order
 }
 
-
+constexpr float NoteDetector::notes[49];
 
 bool NoteDetector::correct_detection(float note_to_play, Goertzel_item* goertzel_powers){
     /// @brief Checks if the detected note is a valid note
