@@ -3,46 +3,99 @@ import os
 import sys  
 import pandas as pd
 import serial
+import time
 
 def load_tabs(file_path):
     """
-    Load the first six lines of a file into a string.
+    Load the six lines of tabs file into a string.
     
     :param file_path: Path to the file to be read.
-    :return: A string containing the first six lines of the file.
+    :return: Array of strings containing the tab lines of the file.
     """
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"The file {file_path} does not exist.")
     
-    with open(file_path, 'r') as file:
-        lines = [next(file) for _ in range(6)]
+    # Initialize strings for each guitar string
+    line_e = ""
+    line_B = ""
+    line_G = ""
+    line_D = ""
+    line_A = ""
+    line_E = ""
     
-    return ''.join(lines)
+    with open(file_path, 'r') as file:
+        line_num = 0
+        for line in file:
+            # Don't strip here - let ESP handle raw data
+            if not line.strip():  # Only check if line is empty (but don't modify it)
+                continue
+                
+            idx = line_num % 6
+            # Remove the first 2 characters (e.g., "e|") because we dont want them to be in mid string,
+            # only at the start
+            # Good Practce: ESP will need to handle the newlines and whitespace, i.e., we don't strip the line
+            content = line[2:] if len(line) > 2 else ""
+            
+            if idx == 0:
+                line_e += content
+            elif idx == 1:
+                line_B += content
+            elif idx == 2:
+                line_G += content
+            elif idx == 3:
+                line_D += content
+            elif idx == 4:
+                line_A += content
+            elif idx == 5:
+                line_E += content
+            
+            line_num += 1
+    
+    # Add the string labels back
+    line_e = "e|" + line_e
+    line_B = "B|" + line_B
+    line_G = "G|" + line_G
+    line_D = "D|" + line_D
+    line_A = "A|" + line_A
+    line_E = "E|" + line_E
+    
+    # Check for incomplete blocks
+    if line_num % 6 != 0:
+        print(f"Warning: tab file has incomplete block (lines not a multiple of 6).")
+    
+    return [line_e, line_B, line_G, line_D, line_A, line_E]
 
 if __name__ == "__main__":
     try:
-        result = load_tabs("../test/tabs.txt")
-        e = result.splitlines()[0]
-        B = result.splitlines()[1]
-        G = result.splitlines()[2]
-        D = result.splitlines()[3]
-        A = result.splitlines()[4]
-        E = result.splitlines()[5]
+        # Load tabs
+        tabs = load_tabs(r"test\tabs.txt")
+        e, B, G, D, A, E = tabs
+        
+        # Connect to ESP
+        ser = serial.Serial('COM3', 115200, timeout=1)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
+        
+        time.sleep(2)  # Wait for the serial connection to initialize
+        ser.flushInput()  # Clear input buffer to avoid reading old data, the esp sends a lot of data on boot
+       
+       
+        for tab in tabs:  #loops through each tab line
+            ser.write((tab + '\n').encode())  #Send each tab line to ESP, Add newline for ESP to recognize end of line
+            time.sleep(0.1)                   # Small delay to ensure ESP processes each line
+        
+        print("Data sent to ESP, waiting for response...")
+        
+        # Read response with timeout
+        start_time = time.time() # Start the timer in seconds
+        while time.time() - start_time < 10:  # 10 second timeout
+            if ser.in_waiting > 0:  # Check if there is data to read
+                response = ser.readline().decode().strip() # Read a line from the ESP
+                if response:
+                    print(f"ESP: {response}") # Print the response from ESP
+        
+        ser.close() # Close the serial connection
+        
 
-        # send the data to the serial port COM7
-        ser = serial.Serial('COM7', 115200, timeout=1)
-        ser.write(e.encode())
-        ser.write(B.encode())
-        ser.write(G.encode())
-        ser.write(D.encode())
-        ser.write(A.encode())
-        ser.write(E.encode())
-
-        # read from serial
-        while True:
-            response = ser.readline().decode() 
-            print(response)
-            
+        print("Timer expired")
     except Exception as e:
         print(f"An error occurred: {e}")
         sys.exit(1)

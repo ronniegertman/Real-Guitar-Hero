@@ -57,29 +57,24 @@ NoteDetector noteDetector; // Create an instance of NoteDetector
 //   }
 // }
 
+bool messageSent = false; // Flag to check if the message has been sent
+
 Guitar guitar; 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT); // Initialize the built-in LED pin as output
-  Serial.begin(115200);         // Start serial communication at 115200 baud rate
   ws2812b.begin(); // LEDs initialization, probably better put this in the esp32 setup
-  // read 6 strings from serial
-  String e = Serial.readStringUntil('\n');
-  String B = Serial.readStringUntil('\n'); 
-  String G = Serial.readStringUntil('\n');
-  String D = Serial.readStringUntil('\n');
-  String A = Serial.readStringUntil('\n');
-  String E = Serial.readStringUntil('\n');
-  // Parse the strings into arrays
-  // guitar.parseTabLine(e, parsedE, lenE);
-  // guitar.parseTabLine(B, parsedB, lenB);
-  // guitar.parseTabLine(G, parsedG, lenG);
-  // guitar.parseTabLine(D, parsedD, lenD);
-  // guitar.parseTabLine(A, parsedA, lenA);
-  // guitar.parseTabLine(E, parsedLowE, lenLowE);
-  // for (int i=0; i < lenE; i++){
-  //   Ser
-  // }
+  Serial.begin(115200); // Start serial communication at 115200 baud rate
+  delay(1000); // Wait for serial connection to establish
+
+  Serial.println("ESP_READY");
+
+  Serial.println("Esp32 setup complete. Waiting for input...");
+
+}
+
+
+
+void loop(){
   
-  // print the first string
-  Serial.println(e);
+
 }
