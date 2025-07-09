@@ -109,8 +109,9 @@ if __name__ == "__main__":
         tabs = load_tabs(r"test\tabs.txt")
         e, B, G, D, A, E = tabs
         
+        # print(e + "\n" + B + "\n" + G + "\n" + D + "\n" + A + "\n" + E)  # Print the tabs for debugging
         # Connect to ESP
-        ser = serial.Serial('COM3', 115200, timeout=1)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
+        ser = serial.Serial('COM3', 115200, timeout=2)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
         
         time.sleep(2)  # Wait for the serial connection to initialize
         if not wait_for_esp_ready(ser):
@@ -121,6 +122,7 @@ if __name__ == "__main__":
         print("ESP is ready, sending data...")
         for tab in tabs:  #loops through each tab line
             ser.write((tab + '\n').encode())  #Send each tab line to ESP, Add newline for ESP to recognize end of line
+            print(f"Sent: {tab}")
             time.sleep(0.1)                   # Small delay to ensure ESP processes each line
         
         print("Data sent to ESP, waiting for response...")

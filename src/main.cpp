@@ -57,7 +57,14 @@ NoteDetector noteDetector; // Create an instance of NoteDetector
 //   }
 // }
 
-bool messageSent = false; // Flag to check if the message has been sent
+
+String line_e = ""; // String to hold the first line of the tab, arduino uses String class Serial.println() works with Arduino's String type
+String line_B = ""; // String to hold the second line of the tab 
+String line_G = ""; // String to hold the third line of the tab
+String line_D = ""; // String to hold the fourth line of the tab
+String line_A = ""; // String to hold the fifth line of the tab
+String line_E = ""; // String to hold the sixth line of the tab
+String tabs =""; // String to hold all the tabs
 
 Guitar guitar; 
 void setup() {
@@ -71,6 +78,30 @@ void setup() {
   Serial.println("ESP_READY"); 
 
   Serial.println("Waiting for tabs to be loaded...");
+
+  tabs = Serial.readString();
+  line_e = tabs.substring(0, tabs.indexOf('\n')); // Extract the first line
+  tabs.remove(0, line_e.length() + 1); // Remove the first line
+  line_B = tabs.substring(0, tabs.indexOf('\n')); // Extract the second line
+  tabs.remove(0, line_B.length() + 1); // Remove the second line
+  line_G = tabs.substring(0, tabs.indexOf('\n')); // Extract the third line
+  tabs.remove(0, line_G.length() + 1); // Remove the third line
+  line_D = tabs.substring(0, tabs.indexOf('\n')); // Extract the fourth
+  tabs.remove(0, line_D.length() + 1); // Remove the fourth line
+  line_A = tabs.substring(0, tabs.indexOf('\n')); // Extract the fifth line
+  tabs.remove(0, line_A.length() + 1); // Remove the fifth line
+  line_E = tabs; // The rest of the string is the sixth line, no need to remove it
+  line_E.trim(); // Trim any whitespace from the end of the last line
+
+  Serial.println("Tabs loaded successfully! here are the tabs:"); // Notify that tabs are loaded
+
+  //Serial.println(tabs); // Print the loaded tabs
+  Serial.println(line_e); // Print the first line
+  Serial.println(line_B); // Print the second line      
+  Serial.println(line_G); // Print the third line
+  Serial.println(line_D); // Print the fourth line
+  Serial.println(line_A); // Print the fifth line
+  Serial.println(line_E); // Print the sixth line
 }
 
 
