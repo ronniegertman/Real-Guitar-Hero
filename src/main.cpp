@@ -66,10 +66,11 @@ void setup() {
   Serial.begin(115200); // Start serial communication at 115200 baud rate
   delay(1000); // Wait for serial connection to establish
 
-  Serial.println("ESP_READY");
 
-  Serial.println("Esp32 setup complete. Waiting for input...");
+  Serial.println(" "); // added space so it wont be one piece with the boot message
+  Serial.println("ESP_READY"); 
 
+  Serial.println("Waiting for tabs to be loaded...");
 }
 
 

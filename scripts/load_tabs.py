@@ -65,6 +65,44 @@ def load_tabs(file_path):
     
     return [line_e, line_B, line_G, line_D, line_A, line_E]
 
+def wait_for_esp_ready(ser):
+    """
+    Wait for ESP to send "ESP_READY" message, ignoring boot messages.
+    
+    :param ser: Serial connection object
+    :return: True if ESP_READY received, False if timeout
+    """
+    print("Waiting for ESP to be ready...")
+    start_time = time.time()
+    
+    while time.time() - start_time < 10:  # 10 second timeout
+        if ser.in_waiting > 0:  # Check if there is data to read
+            try:
+                # Read line and handle potential decoding errors from boot gibberish
+                line = ser.readline()
+                try:
+                    response = line.decode('utf-8').strip()
+                except UnicodeDecodeError:
+                    # Skip lines that can't be decoded (boot gibberish)
+                    print("Skipping boot message (decoding error)")
+                    continue
+                
+                if response:  
+                    print(f"Boot message: {response}")  # Print the boot message for debugging
+                    
+                    # Check if ESP is ready
+                    if "ESP_READY" in response:
+                        print("ESP is ready!")
+                        return True
+            except Exception as e:
+                print(f"Error reading from serial: {e}")
+                continue
+        
+        time.sleep(0.1)  # Small delay to avoid busy waiting
+    
+    return False
+
+
 if __name__ == "__main__":
     try:
         # Load tabs
@@ -75,9 +113,12 @@ if __name__ == "__main__":
         ser = serial.Serial('COM3', 115200, timeout=1)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
         
         time.sleep(2)  # Wait for the serial connection to initialize
-        ser.flushInput()  # Clear input buffer to avoid reading old data, the esp sends a lot of data on boot
+        if not wait_for_esp_ready(ser):
+            print("ESP did not respond with ESP_READY within the timeout period.")
+            ser.close()
+            sys.exit(1)
        
-       
+        print("ESP is ready, sending data...")
         for tab in tabs:  #loops through each tab line
             ser.write((tab + '\n').encode())  #Send each tab line to ESP, Add newline for ESP to recognize end of line
             time.sleep(0.1)                   # Small delay to ensure ESP processes each line
@@ -88,9 +129,13 @@ if __name__ == "__main__":
         start_time = time.time() # Start the timer in seconds
         while time.time() - start_time < 10:  # 10 second timeout
             if ser.in_waiting > 0:  # Check if there is data to read
-                response = ser.readline().decode().strip() # Read a line from the ESP
-                if response:
-                    print(f"ESP: {response}") # Print the response from ESP
+                try:
+                    response = ser.readline().decode().strip() # Read a line from the ESP
+                    if response:
+                        print(f"ESP: {response}") # Print the response from ESP
+                except UnicodeDecodeError: # Handle non-UTF-8 data
+                    print("Received non-UTF-8 data from ESP, skipping...")
+                    continue
         
         ser.close() # Close the serial connection
         
