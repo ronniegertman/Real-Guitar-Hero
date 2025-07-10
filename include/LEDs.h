@@ -16,7 +16,7 @@
 #define NUM_COLS    13
 #define NUM_PIXELS  (NUM_ROWS * NUM_COLS)
 #define PIN_WS2812B D1
-#define MAX_TAB_LENGTH 1000
+#define MAX_TAB_LENGTH 100 //it was 1000 but had memrory issues, so I reduced it to 100
 #define NUM_STRINGS 6
 
 extern uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
@@ -41,6 +41,7 @@ class GuitarTab {
         double freq;
         int led_index;
 };
+extern GuitarTab songNotes[NUM_STRINGS][MAX_TAB_LENGTH];
 
 class Guitar {
     public:

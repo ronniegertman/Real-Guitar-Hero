@@ -161,8 +161,8 @@ void Guitar::getSongSteps(const int parsedLowE[], const int parsedA[], const int
         }
     }
     
-    // Array of pointers to parsed arrays for easier iteration
-    const int* parsedArrays[NUM_STRINGS] = {parsedLowE, parsedA, parsedD, parsedG, parsedB, parsedHiE};
+// Array of pointers to parsed arrays - reordered so lowE is at index 5 (bottom)
+    const int* parsedArrays[NUM_STRINGS] = {parsedHiE, parsedB, parsedG, parsedD, parsedA, parsedLowE};
     
     int outputIndex = 0; // Track where to write in the output array
     
