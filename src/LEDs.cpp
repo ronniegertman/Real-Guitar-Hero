@@ -20,6 +20,7 @@
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 // Parsed fret arrays
+
 int parsedE[MAX_TAB_LENGTH]; int lenE = 0;
 int parsedB[MAX_TAB_LENGTH]; int lenB = 0;
 int parsedG[MAX_TAB_LENGTH]; int lenG = 0;
@@ -60,9 +61,9 @@ void Guitar::parseTabLine(const std::string& line, int* output, int& length) {
     // this takes a given string from loadFullTabFromFile and parses it into an array of integers
     // there a -1 if no note is played in the current time step
   length = 0;
-  for (int i = 0; i < line.length(); i++) {
+  for (size_t i = 0; i < line.length(); i++) { // using size_t to avoid overflow issues and for better practices
     if (isdigit(line[i])) {
-      if (i + 1 < line.length() && isdigit(line[i + 1])) {
+      if (i + size_t (1) < line.length() && isdigit(line[i + 1])) {
         output[length++] = (line[i] - '0') * 10 + (line[i + 1] - '0');
         i++;
       } else {

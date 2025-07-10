@@ -95,15 +95,45 @@ void setup() {
 
   Serial.println("Tabs loaded successfully! here are the tabs:"); // Notify that tabs are loaded
 
-  //Serial.println(tabs); // Print the loaded tabs
+ // Serial.println(tabs); // Print the loaded tabs
   Serial.println(line_e); // Print the first line
-  Serial.println(line_B); // Print the second line      
+  Serial.println(line_B); // Print the second line     
   Serial.println(line_G); // Print the third line
   Serial.println(line_D); // Print the fourth line
   Serial.println(line_A); // Print the fifth line
   Serial.println(line_E); // Print the sixth line
-}
 
+  guitar.parseTabLine(line_e.c_str(), parsedE, lenE); // Parse the first line   
+  guitar.parseTabLine(line_B.c_str(), parsedB, lenB); // Parse the second line   
+  guitar.parseTabLine(line_G.c_str(), parsedG, lenG); // Parse the third line   
+  guitar.parseTabLine(line_D.c_str(), parsedD, lenD); // Parse the fourth line   
+  guitar.parseTabLine(line_A.c_str(), parsedA, lenA); // Parse the fifth line   
+  guitar.parseTabLine(line_E.c_str(), parsedLowE, lenLowE); // Parse the sixth line
+
+  for (int i = 0; i < lenE; i++) {     
+      Serial.print(parsedE[i]);   
+  }
+  Serial.println(); // Print a new line after the first line
+  for (int i = 0; i < lenB; i++) {
+      Serial.print(parsedB[i]);   
+  } 
+  Serial.println(); // Print a new line after the second line
+  for (int i = 0; i < lenG; i++) {
+      Serial.print(parsedG[i]);   
+  }
+  Serial.println(); // Print a new line after the third line
+  for (int i = 0; i < lenD; i++) {
+      Serial.print(parsedD[i]);   
+  }
+  Serial.println(); // Print a new line after the fourth line
+  for (int i = 0; i < lenA; i++) {
+      Serial.print(parsedA[i]);   
+  }
+  Serial.println(); // Print a new line after the fifth line
+  for (int i = 0; i < lenLowE; i++) {
+      Serial.print(parsedLowE[i]);   
+  }
+}
 
 
 void loop(){

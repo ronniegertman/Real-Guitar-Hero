@@ -23,6 +23,19 @@ extern uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
 
 extern Adafruit_NeoPixel ws2812b;
 
+extern int parsedE[MAX_TAB_LENGTH]; 
+extern int lenE;
+extern int parsedB[MAX_TAB_LENGTH]; 
+extern int lenB;
+extern int parsedG[MAX_TAB_LENGTH]; 
+extern int lenG;
+extern int parsedD[MAX_TAB_LENGTH]; 
+extern int lenD;
+extern int parsedA[MAX_TAB_LENGTH]; 
+extern int lenA;
+extern int parsedLowE[MAX_TAB_LENGTH]; 
+extern int lenLowE;
+
 class GuitarTab {
     public:
         double freq;

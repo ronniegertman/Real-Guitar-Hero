@@ -120,10 +120,12 @@ if __name__ == "__main__":
             sys.exit(1)
        
         print("ESP is ready, sending data...")
-        for tab in tabs:  #loops through each tab line
-            ser.write((tab + '\n').encode())  #Send each tab line to ESP, Add newline for ESP to recognize end of line
-            print(f"Sent: {tab}")
-            time.sleep(0.1)                   # Small delay to ensure ESP processes each line
+        for tab in tabs:  # loops through each tab line
+            # Remove any trailing newlines and add exactly one, otherwise ESP will not read it correctly
+            clean_tab = tab.rstrip('\n')
+            ser.write((clean_tab + '\n').encode())
+            print(f"Sent: {clean_tab}")
+            time.sleep(0.1)  # Small delay to ensure ESP processes each line
         
         print("Data sent to ESP, waiting for response...")
         
