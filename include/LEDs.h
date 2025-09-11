@@ -18,7 +18,9 @@
 #define PIN_WS2812B D1
 #define MAX_TAB_LENGTH 100 //it was 1000 but had memrory issues, so I reduced it to 100
 #define NUM_STRINGS 6
+#define BUTTON_PIN  0 // GPIO0, usually the flash button on ESP8266 boards
 
+extern int step;
 extern uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
 
 extern Adafruit_NeoPixel ws2812b;

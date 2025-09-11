@@ -2,21 +2,21 @@
 #include <Adafruit_NeoPixel.h>
 
 // Ensure these macros are defined before use, or include the header where they are defined
-#ifndef NUM_PIXELS
-#define NUM_PIXELS (NUM_COLS*NUM_ROWS)
-#endif
+// #ifndef NUM_PIXELS
+// #define NUM_PIXELS (NUM_COLS*NUM_ROWS)
+// #endif
 
-#ifndef PIN_WS2812B
-#define PIN_WS2812B D1 
-#endif
+// #ifndef PIN_WS2812B
+// #define PIN_WS2812B D1 
+// #endif
 
-#ifndef NUM_ROWS
-#define NUM_ROWS 8 // or your actual number of rows
-#endif
+// #ifndef NUM_ROWS
+// #define NUM_ROWS 8 // or your actual number of rows
+// #endif
 
-#ifndef NUM_COLS
-#define NUM_COLS 13 // or your actual number of columns
-#endif
+// #ifndef NUM_COLS
+// #define NUM_COLS 13 // or your actual number of columns
+// #endif
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 // Parsed fret arrays

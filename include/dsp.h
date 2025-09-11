@@ -6,7 +6,7 @@
 // frequencies of notes:
 #define C1 32.70
 #define C1_SHARP 34.65
-#define D1 36.71
+#define D_1 36.71
 #define D1_SHARP 38.89
 #define E1 41.20
 #define F1 43.65

@@ -141,7 +141,7 @@ if __name__ == "__main__":
                     print("Received non-UTF-8 data from ESP, skipping...")
                     continue
         
-        ser.close() # Close the serial connection
+        #ser.close() # Close the serial connection 
         
 
         print("Timer expired")

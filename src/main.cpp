@@ -128,6 +128,26 @@ void setup() {
 }
 
 void loop(){
-  
+  static bool lastButtonState = HIGH; // Initialize last button state to HIGH 
+  bool currentButtonState = digitalRead(BUTTON_PIN); // Read the current button state
+
+
+  if (lastButtonState == HIGH && currentButtonState == LOW){
+
+  ws2812b.clear(); // Clear all LEDs
+  for (int i=0; i < NUM_STRINGS; i++) {
+    if(songNotes[i][step].led_index >= 0) { // Check if the led_index is valid
+      ws2812b.setPixelColor(songNotes[i][step].led_index, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
+      Serial.println(songNotes[i][step].led_index);
+    }
+  }
+  step++; // Increment the step
+  if (step >= lenLowE) { // If step exceeds the length of the tab
+    step = 0; // Reset the step to 0
+  }
+  ws2812b.show(); // Update the LED strip
+  delay(50);
+  }
+  lastButtonState = currentButtonState; // Update the last button state
 
 }
