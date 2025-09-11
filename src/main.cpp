@@ -112,19 +112,7 @@ void setup() {
 
   guitar.getSongSteps(parsedLowE, parsedA, parsedD, parsedG, parsedB, parsedE, lenLowE, songNotes); // Get the song steps from the parsed lines
 
-//   for (int i = 0; i < NUM_STRINGS; i++) {
-//         for (int j = 0; j < MAX_TAB_LENGTH; j++) {
-//             Serial.print("songNotes[");
-//             Serial.print(i);
-//             Serial.print("][");
-//             Serial.print(j);
-//             Serial.print("] = {freq: ");
-//             Serial.print(songNotes[i][j].freq);
-//             Serial.print(", led_index: ");
-//             Serial.print(songNotes[i][j].led_index);
-//             Serial.println("}");
-//         }
-// }
+
 }
 
 void loop(){
