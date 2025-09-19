@@ -34,7 +34,7 @@ def audio_sampling():
     return time, audio_samples
 
 def serial_send(time, audio_sample):
-    ser = serial.Serial('COM7', 115200, timeout=1)
+    ser = serial.Serial('COM5', 115200, timeout=1)
     pytime.sleep(2)  # Wait for the serial connection to initialize
     start = pytime.time()
     for t, sample in zip(time, audio_sample):
