@@ -78,8 +78,10 @@ void setup() {
   Serial.println("ESP_READY"); 
 
   Serial.println("Waiting for tabs to be loaded...");
-
-  tabs = Serial.readString();
+  while (!Serial.available()) {
+    delay(10); // Wait until data arrives
+  }
+  String tabs = Serial.readString(); // Read the tabs until newline character
   line_e = tabs.substring(0, tabs.indexOf('\n')); // Extract the first line
   tabs.remove(0, line_e.length() + 1); // Remove the first line
   line_B = tabs.substring(0, tabs.indexOf('\n')); // Extract the second line
@@ -92,7 +94,7 @@ void setup() {
   tabs.remove(0, line_A.length() + 1); // Remove the fifth line
   line_E = tabs; // The rest of the string is the sixth line, no need to remove it
   line_E.trim(); // Trim any whitespace from the end of the last line
-
+ 
   Serial.println("Tabs loaded successfully! here are the tabs:"); // Notify that tabs are loaded
 
  // Serial.println(tabs); // Print the loaded tabs

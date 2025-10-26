@@ -111,7 +111,7 @@ if __name__ == "__main__":
         
         # print(e + "\n" + B + "\n" + G + "\n" + D + "\n" + A + "\n" + E)  # Print the tabs for debugging
         # Connect to ESP
-        ser = serial.Serial('COM4', 115200, timeout=4)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
+        ser = serial.Serial('COM5', 115200, timeout=4)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
         
         time.sleep(4)  # Wait for the serial connection to initialize
         if not wait_for_esp_ready(ser):
@@ -126,7 +126,7 @@ if __name__ == "__main__":
             ser.write((clean_tab + '\n').encode())
             print(f"Sent: {clean_tab}")
             time.sleep(0.1)  # Small delay to ensure ESP processes each line
-        
+
         print("Data sent to ESP, waiting for response...")
         
         # Read response with timeout
