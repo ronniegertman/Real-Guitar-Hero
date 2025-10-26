@@ -111,9 +111,9 @@ if __name__ == "__main__":
         
         # print(e + "\n" + B + "\n" + G + "\n" + D + "\n" + A + "\n" + E)  # Print the tabs for debugging
         # Connect to ESP
-        ser = serial.Serial('COM3', 115200, timeout=2)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
+        ser = serial.Serial('COM4', 115200, timeout=4)  # Adjust COM port as necessary, Yuval-3, Ronnie-7
         
-        time.sleep(2)  # Wait for the serial connection to initialize
+        time.sleep(4)  # Wait for the serial connection to initialize
         if not wait_for_esp_ready(ser):
             print("ESP did not respond with ESP_READY within the timeout period.")
             ser.close()
@@ -131,7 +131,7 @@ if __name__ == "__main__":
         
         # Read response with timeout
         start_time = time.time() # Start the timer in seconds
-        while time.time() - start_time < 10:  # 10 second timeout
+        while time.time() - start_time < 20:  # 10 second timeout
             if ser.in_waiting > 0:  # Check if there is data to read
                 try:
                     response = ser.readline().decode().strip() # Read a line from the ESP
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                     print("Received non-UTF-8 data from ESP, skipping...")
                     continue
         
-        #ser.close() # Close the serial connection 
+        ser.close() # Close the serial connection 
         
 
         print("Timer expired")

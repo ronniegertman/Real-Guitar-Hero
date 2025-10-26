@@ -15,7 +15,7 @@
 #define NUM_ROWS    8
 #define NUM_COLS    13
 #define NUM_PIXELS  (NUM_ROWS * NUM_COLS)
-#define PIN_WS2812B D1
+#define PIN_WS2812B 4
 #define MAX_TAB_LENGTH 100 //it was 1000 but had memrory issues, so I reduced it to 100
 #define NUM_STRINGS 6
 #define BUTTON_PIN  0 // GPIO0, usually the flash button on ESP8266 boards

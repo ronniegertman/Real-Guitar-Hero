@@ -121,10 +121,14 @@ void loop(){
 
 
   if (lastButtonState == HIGH && currentButtonState == LOW){
+   
 
   ws2812b.clear(); // Clear all LEDs
   for (int i=0; i < NUM_STRINGS; i++) {
+    Serial.println( songNotes[i][step].led_index);
     if(songNotes[i][step].led_index >= 0) { // Check if the led_index is valid
+          //  Serial.println("Button pressed, starting the song...");
+
       ws2812b.setPixelColor(songNotes[i][step].led_index, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
       Serial.println(songNotes[i][step].led_index);
     }

@@ -18,7 +18,7 @@
 #define B_1 61.74
 #define C2 65.41
 #define C2_SHARP 69.30
-#define D2 73.42
+#define D_2 73.42
 #define D2_SHARP 77.78
 #define E2 82.41
 #define F2 87.31
