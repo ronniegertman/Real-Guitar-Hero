@@ -8,8 +8,8 @@ class Goertzel_item{
 
 // #define N 512 // number of samples
 // #define SAMPLING_RATE 10000 //Hz
-#define N 2048 // number of samples
-#define SAMPLING_RATE 5120 //Hz
+#define N 4096 // number of samples
+#define SAMPLING_RATE 10240 //Hz
 
 // frequencies of notes:
 #define C1 32.70

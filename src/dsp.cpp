@@ -42,7 +42,7 @@ float DSP::detect_note(float* input){
     /// @param input Pointer to the input signal array 
     /// @return The frequency of the detected note, or 0.0 if no note is detected
     // find the maximum amplitude
-    float max_power = 0.0f;
+    float max_power = -1.0f;
     float max_freq = 0.0f;
     for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
         float power = Goertzel(input, notes[i]);
