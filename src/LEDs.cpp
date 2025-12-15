@@ -11,7 +11,6 @@ int parsedG[MAX_TAB_LENGTH]; int lenG = 0;
 int parsedD[MAX_TAB_LENGTH]; int lenD = 0;
 int parsedA[MAX_TAB_LENGTH]; int lenA = 0;
 int parsedLowE[MAX_TAB_LENGTH]; int lenLowE = 0;
-int step = 0;
 
 const GuitarTab Guitar::guitar_tabs[6][13] = {
     { {E2, 5}, {F2, 10}, {F2_SHARP, 21}, {G2, 26}, {G2_SHARP, 37}, {A2, 42}, {A2_SHARP, 53}, {B2, 58}, {C3, 69}, {C3_SHARP, 74}, {D3, 85}, {D3_SHARP, 90}, {E3, 101} },

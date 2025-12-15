@@ -39,6 +39,7 @@ String line_E = "E|-----------------|-----------------|-----------------|";
 String tabs =""; // String to hold all the tabs
 
 Guitar guitar; 
+int step = 0;
 ////////////////////////////////////////////////////////////////////////////////////
 bool first_time = true;
 
@@ -159,21 +160,28 @@ void loop(){
         
         if (detected_note > 0) {
           Serial.printf("Note detected: %.2f Hz\n", detected_note);
-          delay(100);
         }
       }
     }
   }
 
     for (int str = 0; str < NUM_STRINGS; str++) {
-      Serial.printf("Checking string %d: expected freq %.2f Hz, detected note %d\n", str, songNotes[str][step].freq, detected_note);
+
         if(detected_note == songNotes[str][step].freq) {
-          ws2812b.clear();
-          ws2812b.setPixelColor(5, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-          ws2812b.show(); // Update the LED strip
-          delay(500);
-          ws2812b.setPixelColor(7, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-          ws2812b.show(); // Update the LED strip
+          Serial.printf("Matched string %d at step %d: freq %.2f Hz\n", str, step, detected_note);
+          step ++;
+        for (int tmp = 0; tmp < NUM_STRINGS; tmp++) {
+
+          if(songNotes[tmp][step].freq > 0) {
+          Serial.printf("expecting string %d at step %d: freq %.2f Hz\n", tmp, step, songNotes[tmp][step].freq);
+          }}
+          // delay(500);
+          // ws2812b.clear();
+          // ws2812b.setPixelColor(5, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
+          // ws2812b.show(); // Update the LED strip
+          // delay(500);
+          // ws2812b.setPixelColor(7, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
+          // ws2812b.show(); // Update the LED strip
 
             // ws2812b.clear(); // Clear all LEDs
             // for (int i=0; i < NUM_STRINGS; i++) {
@@ -193,10 +201,12 @@ void loop(){
             // delay(50);
             // break; // Exit the loop after processing the matched note
             // }
-        } 
-            
-
-}
+        }
+        // else{
+        //   Serial.printf("No match for string %d at step %d: detected %.2f Hz, expected %.2f Hz\n", str, step, detected_note, songNotes[str][step].freq);
+        //   delay(100);
+        // } 
+    }
 }
   
   

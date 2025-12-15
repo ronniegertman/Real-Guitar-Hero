@@ -20,7 +20,6 @@
 #define NUM_STRINGS 6
 #define BUTTON_PIN  0 // GPIO0, usually the flash button on ESP8266 boards
 
-extern int step;
 extern uint32_t ledMatrix[NUM_ROWS][NUM_COLS];
 
 extern Adafruit_NeoPixel ws2812b;
