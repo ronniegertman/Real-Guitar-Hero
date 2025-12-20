@@ -164,17 +164,17 @@ void loop(){
       }
     }
   }
-
     for (int str = 0; str < NUM_STRINGS; str++) {
-
-        if(detected_note == songNotes[str][step].freq) {
+        if(songNotes[str][step].freq > 0.0f) {
+          Serial.printf("expected freq %.2f Hz\n",songNotes[str][step].freq);
+        }
+        if(fabs(detected_note - songNotes[str][step].freq) < 0.5f) { // Allow a tolerance of 5 Hz
           Serial.printf("Matched string %d at step %d: freq %.2f Hz\n", str, step, detected_note);
-          step ++;
-        for (int tmp = 0; tmp < NUM_STRINGS; tmp++) {
-
-          if(songNotes[tmp][step].freq > 0) {
-          Serial.printf("expecting string %d at step %d: freq %.2f Hz\n", tmp, step, songNotes[tmp][step].freq);
-          }}
+          step++;
+          Serial.printf("Step incremented to %d\n", step);
+          if (step >= lenLowE) { // If step exceeds the length of the tab
+              step = 0; // Reset the step to 0
+          }
           // delay(500);
           // ws2812b.clear();
           // ws2812b.setPixelColor(5, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
