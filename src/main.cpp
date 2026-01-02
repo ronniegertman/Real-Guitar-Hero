@@ -130,9 +130,10 @@ void loop(){
       }
       Serial.println();
     }
-    ws2812b.setPixelColor(3, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-    ws2812b.setPixelColor(4, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-    ws2812b.show(); // Update the LED strip
+    for (int i=0; i<NUM_STRINGS; i++){
+      ws2812b.setPixelColor(songNotes[i][step].led_index, ws2812b.Color(255, 0, 0));
+    }
+    ws2812b.show();
     first_time = false;
   }
 
@@ -169,45 +170,38 @@ void loop(){
           Serial.printf("expected freq %.2f Hz\n",songNotes[str][step].freq);
         }
         if(fabs(detected_note - songNotes[str][step].freq) < 0.5f) { // Allow a tolerance of 5 Hz
-          Serial.printf("Matched string %d at step %d: freq %.2f Hz\n", str, step, detected_note);
-          step++;
-          Serial.printf("Step incremented to %d\n", step);
+          // Serial.printf("Matched string %d at step %d: freq %.2f Hz\n", str, step, detected_note);
+          // step++;
+          // Serial.printf("Step incremented to %d\n", step);
+          // if (step >= lenLowE) { // If step exceeds the length of the tab
+          //     step = 0; // Reset the step to 0
+          // }
+
+          ws2812b.clear(); // Clear all LEDs
+          for (int i=0; i < NUM_STRINGS; i++) {
+              if(songNotes[i][step].led_index >= 0) { // Check if the led_index is valid
+              ws2812b.setPixelColor(songNotes[i][step].led_index, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
+              Serial.println(songNotes[i][step].led_index);
+              } 
+              else{
+              Serial.println("fail");
+              }
+          }
+          step++; // Increment the step
           if (step >= lenLowE) { // If step exceeds the length of the tab
               step = 0; // Reset the step to 0
           }
-          // delay(500);
-          // ws2812b.clear();
-          // ws2812b.setPixelColor(5, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-          // ws2812b.show(); // Update the LED strip
-          // delay(500);
-          // ws2812b.setPixelColor(7, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-          // ws2812b.show(); // Update the LED strip
-
-            // ws2812b.clear(); // Clear all LEDs
-            // for (int i=0; i < NUM_STRINGS; i++) {
-            //     if(songNotes[i][step].led_index >= 0) { // Check if the led_index is valid
-            //     ws2812b.setPixelColor(songNotes[i][step].led_index, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-            //     Serial.println(songNotes[i][step].led_index);
-            //     } 
-            //     else{
-            //     Serial.println("fail");
-            //     }
-            // }
-            // step++; // Increment the step
-            // if (step >= lenLowE) { // If step exceeds the length of the tab
-            //     step = 0; // Reset the step to 0
-            // }
-            // ws2812b.show(); // Update the LED strip
-            // delay(50);
-            // break; // Exit the loop after processing the matched note
-            // }
-        }
+          ws2812b.show(); // Update the LED strip
+          delay(50);
+          break; // Exit the loop after processing the matched note
+          }
+      }
         // else{
         //   Serial.printf("No match for string %d at step %d: detected %.2f Hz, expected %.2f Hz\n", str, step, detected_note, songNotes[str][step].freq);
         //   delay(100);
         // } 
     }
-}
+
   
   
 
