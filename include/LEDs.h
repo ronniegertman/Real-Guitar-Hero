@@ -12,7 +12,7 @@
 #include <iostream>
 #include <fstream>
 
-#define NUM_ROWS    8
+#define NUM_ROWS    6
 #define NUM_COLS    13
 #define NUM_PIXELS  (NUM_ROWS * NUM_COLS)
 #define PIN_WS2812B 16 

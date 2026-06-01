@@ -13,12 +13,12 @@ int parsedA[MAX_TAB_LENGTH]; int lenA = 0;
 int parsedLowE[MAX_TAB_LENGTH]; int lenLowE = 0;
 
 const GuitarTab Guitar::guitar_tabs[6][13] = {
-    { {E2, 5}, {F2, 10}, {F2_SHARP, 21}, {G2, 26}, {G2_SHARP, 37}, {A2, 42}, {A2_SHARP, 53}, {B2, 58}, {C3, 69}, {C3_SHARP, 74}, {D3, 85}, {D3_SHARP, 90}, {E3, 101} },
-    { {A2, 4}, {A2_SHARP, 11}, {B2, 20}, {C3, 27}, {C3_SHARP, 36}, {D3, 43}, {D3_SHARP, 52}, {E3, 59}, {F3, 68}, {F3_SHARP, 75}, {G3, 84}, {G3_SHARP, 91}, {A3, 100} },
-    { {D3, 3}, {D3_SHARP, 12}, {E3, 19}, {F3, 28}, {F3_SHARP, 35}, {G3, 44}, {G3_SHARP, 51}, {A3, 60}, {A3_SHARP, 67}, {B3, 76}, {C4, 83}, {C4_SHARP, 92}, {D4, 99} },
-    { {G3, 2}, {G3_SHARP, 13}, {A3, 18}, {A3_SHARP, 29}, {B3, 34}, {C4, 45}, {C4_SHARP, 50}, {D4, 61}, {D4_SHARP, 66}, {E4, 77}, {F4, 82}, {F4_SHARP, 93}, {G4, 98} },
-    { {B3, 1}, {C4, 14}, {C4_SHARP, 17}, {D4, 30}, {D4_SHARP, 33}, {E4, 46}, {F4, 49}, {F4_SHARP, 62}, {G4, 65}, {G4_SHARP, 78}, {A4, 81}, {A4_SHARP, 94}, {B4, 97} },
-    { {E4, 0}, {F4, 15}, {F4_SHARP, 16}, {G4, 31}, {G4_SHARP, 32}, {A4, 47}, {A4_SHARP, 48}, {B4, 63}, {C5, 64}, {C5_SHARP, 79}, {D5, 80}, {D5_SHARP, 95}, {E5, 96} }
+   { {E2, 75}, {F2, 74}, {F2_SHARP, 61}, {G2, 60}, {G2_SHARP, 48}, {A2, 47}, {A2_SHARP, 36}, {B2, 35}, {C3, 24}, {C3_SHARP, 23}, {D3, 12}, {D3_SHARP, 11}, {E3, 0} },
+    { {A2, 76}, {A2_SHARP, 73}, {B2, 62}, {C3, 59}, {C3_SHARP, 49}, {D3, 46}, {D3_SHARP, 37}, {E3, 34}, {F3, 25}, {F3_SHARP, 22}, {G3, 13}, {G3_SHARP, 10}, {A3, 1} },
+    { {D3, 77}, {D3_SHARP, 72}, {E3, 63}, {F3, 58}, {F3_SHARP, 50}, {G3, 45}, {G3_SHARP, 38}, {A3, 33}, {A3_SHARP, 26}, {B3, 21}, {C4, 14}, {C4_SHARP, 9}, {D4, 2} },
+    { {G3, 79}, {G3_SHARP, 70}, {A3, 65}, {A3_SHARP, 56}, {B3, 51}, {C4, 44}, {C4_SHARP, 39}, {D4, 32}, {D4_SHARP, 27}, {E4, 20}, {F4, 15}, {F4_SHARP, 8}, {G4, 3} },
+    { {B3, 80}, {C4, 69}, {C4_SHARP, 66}, {D4, 55}, {D4_SHARP, 52}, {E4, 43}, {F4, 40}, {F4_SHARP, 31}, {G4, 28}, {G4_SHARP, 19}, {A4, 16}, {A4_SHARP, 7}, {B4, 4} },
+    { {E4, 81}, {F4, 68}, {F4_SHARP, 67}, {G4, 54}, {G4_SHARP, 53}, {A4, 42}, {A4_SHARP, 41}, {B4, 30}, {C5, 29}, {C5_SHARP, 18}, {D5, 17}, {D5_SHARP, 6}, {E5, 5} }
 };
 GuitarTab songNotes[NUM_STRINGS][MAX_TAB_LENGTH];
 

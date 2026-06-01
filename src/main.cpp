@@ -30,13 +30,21 @@ int sample_count = 0;
 ////////////////////////////////////////////////////////////////////////////////////
 
 //LED and notes parameters
-String line_e = "e|-------5-7-----7-|-8-----8-2-----2-|-0---------0-----|";
-String line_B = "B|-----5-----5-----|---5-------3-----|---1---1-----1---|";
-String line_G = "G|---5---------5---|-----5-------2---|-----2---------2-|";
-String line_D = "D|-7---------------|-----------------|-----------------|"; 
+// String line_e = "e|-------5-7-----7-|-8-----8-2-----2-|-0---------0-----|";
+// String line_B = "B|-----5-----5-----|---5-------3-----|---1---1-----1---|";
+// String line_G = "G|---5---------5---|-----5-------2---|-----2---------2-|";
+// String line_D = "D|-7---------------|-----------------|-----------------|"; 
+// String line_A = "A|-----------------|-----------------|-----------------|"; 
+// String line_E = "E|-----------------|-----------------|-----------------|"; 
+// String tabs =""; // String to hold all the tabs
+
+String line_e = "e|-----------------|-----------------|-----------------|";
+String line_B = "B|-----------------|-----------------|-----------------|";
+String line_G = "G|-----------------|-----------------|-----------------|";
+String line_D = "D|-----------------|-----------------|-----------------|"; 
 String line_A = "A|-----------------|-----------------|-----------------|"; 
-String line_E = "E|-----------------|-----------------|-----------------|"; 
-String tabs =""; // String to hold all the tabs
+String line_E = "E|0---3---5---0---3|---6---5---0---3-|--5---3---0------|"; 
+String tabs ="";
 
 Guitar guitar; 
 int step = 0;
@@ -130,6 +138,7 @@ void loop(){
       }
       Serial.println();
     }
+    ws2812b.clear(); 
     for (int i=0; i<NUM_STRINGS; i++){
       ws2812b.setPixelColor(songNotes[i][step].led_index, ws2812b.Color(255, 0, 0));
     }
@@ -169,7 +178,7 @@ void loop(){
         if(songNotes[str][step].freq > 0.0f) {
           Serial.printf("expected freq %.2f Hz\n",songNotes[str][step].freq);
         }
-        if(fabs(detected_note - songNotes[str][step].freq) < 0.5f) { // Allow a tolerance of 5 Hz
+        if((fabs(detected_note - songNotes[str][step].freq) < 0.5f)) { // Allow a tolerance of 5 Hz
           // Serial.printf("Matched string %d at step %d: freq %.2f Hz\n", str, step, detected_note);
           // step++;
           // Serial.printf("Step incremented to %d\n", step);
@@ -177,6 +186,10 @@ void loop(){
           //     step = 0; // Reset the step to 0
           // }
 
+          step++; // Increment the step
+          if (step >= lenLowE) { // If step exceeds the length of the tab
+              step = 0; // Reset the step to 0
+          }
           ws2812b.clear(); // Clear all LEDs
           for (int i=0; i < NUM_STRINGS; i++) {
               if(songNotes[i][step].led_index >= 0) { // Check if the led_index is valid
@@ -186,10 +199,6 @@ void loop(){
               else{
               Serial.println("fail");
               }
-          }
-          step++; // Increment the step
-          if (step >= lenLowE) { // If step exceeds the length of the tab
-              step = 0; // Reset the step to 0
           }
           ws2812b.show(); // Update the LED strip
           delay(50);
