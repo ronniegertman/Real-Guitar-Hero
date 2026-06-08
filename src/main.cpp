@@ -30,21 +30,14 @@ int sample_count = 0;
 ////////////////////////////////////////////////////////////////////////////////////
 
 //LED and notes parameters
-// String line_e = "e|-------5-7-----7-|-8-----8-2-----2-|-0---------0-----|";
-// String line_B = "B|-----5-----5-----|---5-------3-----|---1---1-----1---|";
-// String line_G = "G|---5---------5---|-----5-------2---|-----2---------2-|";
-// String line_D = "D|-7---------------|-----------------|-----------------|"; 
-// String line_A = "A|-----------------|-----------------|-----------------|"; 
-// String line_E = "E|-----------------|-----------------|-----------------|"; 
-// String tabs =""; // String to hold all the tabs
+String line_e = "e|-------------------------------------------------------------------------------------------------|";
+String line_B = "B|---------0-------1-----------------------------0--1----------------------------------------------|";
+String line_G = "G|-------------------------------0---2-------------------------0----2------------------------------|";
+String line_D = "D|-----2--------------------------------------2----------------------------------------------------|";
+String line_A = "A|-0-----------------------3---------------0---------------3---------------------------------------|";
+String line_E = "E|----------------------1-------------------------------1------------------------------------------|";
+String tabs =""; // String to hold all the tabs
 
-String line_e = "e|-----------------|-----------------|-----------------|";
-String line_B = "B|-----------------|-----------------|-----------------|";
-String line_G = "G|-----------------|-----------------|-----------------|";
-String line_D = "D|-----------------|-----------------|-----------------|"; 
-String line_A = "A|-----------------|-----------------|-----------------|"; 
-String line_E = "E|0---3---5---0---3|---6---5---0---3-|--5---3---0------|"; 
-String tabs ="";
 
 Guitar guitar; 
 int step = 0;
@@ -156,7 +149,7 @@ void loop(){
     int16_t samples_read = bytesIn / sizeof(int16_t);
     
     // Copy samples to input signal buffer
-    for (int16_t i = 0; i < samples_read; ++i) {
+    for (int16_t i = 0; i < samples_read; i+=1) {
       // Normalize the 16-bit sample to float (-1.0 to 1.0)
       input_signal[sample_count] = sBuffer[i] / 32768.0f;
       sample_count++;
@@ -169,14 +162,13 @@ void loop(){
         detected_note = dsp.detect_note(input_signal);
         
         if (detected_note > 0) {
-          Serial.printf("Note detected: %.2f Hz\n", detected_note);
         }
       }
     }
   }
     for (int str = 0; str < NUM_STRINGS; str++) {
         if(songNotes[str][step].freq > 0.0f) {
-          Serial.printf("expected freq %.2f Hz\n",songNotes[str][step].freq);
+ //         Serial.printf("expected freq %.2f Hz\n",songNotes[str][step].freq);
         }
         if((fabs(detected_note - songNotes[str][step].freq) < 0.5f)) { // Allow a tolerance of 5 Hz
           // Serial.printf("Matched string %d at step %d: freq %.2f Hz\n", str, step, detected_note);

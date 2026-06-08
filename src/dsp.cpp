@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "dsp.h"
 
-
+#define THRESHOLD 1500 // Threshold for note detection, can be adjusted based on testing
 
 float DSP::Goertzel(float* input, float freq ,float s_prev, float s_prev_prev){
     /// @brief Goertzel algorithm for detecting a specific frequency in a signal
@@ -47,11 +47,12 @@ float DSP::detect_note(float* input){
     for (int i = 0; i < sizeof(notes) / sizeof(notes[0]); i++){
         float power = Goertzel(input, notes[i]);
         // Serial.printf("Goertzel power for %f: %f\n", notes[i], power);
-        if (power > max_power) { // Threshold to detect a note
+        if (power > max_power && power > THRESHOLD) { // Threshold to detect a note
             max_power = power;
             max_freq = notes[i];
         }
     }
+    Serial.printf("Max power: %f at frequency: %f\n", max_power, max_freq);
     return max_freq; // Return the detected frequency
 }
 
