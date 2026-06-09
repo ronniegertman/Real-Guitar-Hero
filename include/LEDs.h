@@ -9,8 +9,6 @@
 #include <cctype>   // for isdigit
 #include "dsp.h" 
 
-#include <iostream>
-#include <fstream>
 
 #define NUM_ROWS    7
 #define NUM_COLS    13

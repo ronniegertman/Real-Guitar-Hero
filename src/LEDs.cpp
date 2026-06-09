@@ -78,54 +78,54 @@ void Guitar::displayStep(int current_step) {
 
 
 
-bool Guitar::loadFullTabFromFile(const std::string& filename,
-                         std::string& line_e,
-                         std::string& line_B,
-                         std::string& line_G,
-                         std::string& line_D,
-                         std::string& line_A,
-                         std::string& line_E)
-{
-    // this takes a file and seperates it into 6 strings pun - intended
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Could not open file: " << filename << std::endl;
-        return false;
-    }
+// bool Guitar::loadFullTabFromFile(const std::string& filename,
+//                          std::string& line_e,
+//                          std::string& line_B,
+//                          std::string& line_G,
+//                          std::string& line_D,
+//                          std::string& line_A,
+//                          std::string& line_E)
+// {
+//     // this takes a file and seperates it into 6 strings pun - intended
+//     std::ifstream file(filename);
+//     if (!file.is_open()) {
+//         std::cerr << "Could not open file: " << filename << std::endl;
+//         return false;
+//     }
 
-    std::string line;
-    int line_num = 0;
+//     std::string line;
+//     int line_num = 0;
 
-    while (std::getline(file, line)) {
-        int idx = line_num % 6;
-        switch (idx) {
-            case 0: line_e += line.substr(2); break;
-            case 1: line_B += line.substr(2); break;
-            case 2: line_G += line.substr(2); break;
-            case 3: line_D += line.substr(2); break;
-            case 4: line_A += line.substr(2); break;
-            case 5: line_E += line.substr(2); break;
-        }
-        line_num++;
-    }
+//     while (std::getline(file, line)) {
+//         int idx = line_num % 6;
+//         switch (idx) {
+//             case 0: line_e += line.substr(2); break;
+//             case 1: line_B += line.substr(2); break;
+//             case 2: line_G += line.substr(2); break;
+//             case 3: line_D += line.substr(2); break;
+//             case 4: line_A += line.substr(2); break;
+//             case 5: line_E += line.substr(2); break;
+//         }
+//         line_num++;
+//     }
 
-    file.close();
+//     file.close();
 
-    // Add the string labels back to the beginning
-    line_e = "e|" + line_e;
-    line_B = "B|" + line_B;
-    line_G = "G|" + line_G;
-    line_D = "D|" + line_D;
-    line_A = "A|" + line_A;
-    line_E = "E|" + line_E;
+//     // Add the string labels back to the beginning
+//     line_e = "e|" + line_e;
+//     line_B = "B|" + line_B;
+//     line_G = "G|" + line_G;
+//     line_D = "D|" + line_D;
+//     line_A = "A|" + line_A;
+//     line_E = "E|" + line_E;
 
-    // Check we actually read complete blocks
-    if (line_num % 6 != 0) {
-        std::cerr << "Warning: tab file has incomplete block (lines not a multiple of 6)." << std::endl;
-    }
+//     // Check we actually read complete blocks
+//     if (line_num % 6 != 0) {
+//         std::cerr << "Warning: tab file has incomplete block (lines not a multiple of 6)." << std::endl;
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 
 

@@ -22,7 +22,6 @@ using namespace std;
 // note detection parameters
 DSP dsp;
 float input_signal[N] = {0}; // Array to hold the input signal samples
-float time_signal[N] = {0};
 float detected_note = 0.0f; // Variable to hold the detected note frequency
 Goertzel_item amps[49];
 int sample_count = 0;
@@ -30,12 +29,18 @@ int sample_count = 0;
 ////////////////////////////////////////////////////////////////////////////////////
 
 //LED and notes parameters
-String line_e = "e|-------------------------------------------------------------------------------------------------|";
-String line_B = "B|---------0-------1-----------------------------0--1----------------------------------------------|";
-String line_G = "G|-------------------------------0---2-------------------------0----2------------------------------|";
-String line_D = "D|-----2--------------------------------------2----------------------------------------------------|";
-String line_A = "A|-0-----------------------3---------------0---------------3---------------------------------------|";
-String line_E = "E|----------------------1-------------------------------1------------------------------------------|";
+// String line_e = "e|-------------------------------------------------------------------------------------------------|";
+// String line_B = "B|---------0-------1-----------------------------0--1----------------------------------------------|";
+// String line_G = "G|-------------------------------0---2-------------------------0----2------------------------------|";
+// String line_D = "D|-----2--------------------------------------2----------------------------------------------------|";
+// String line_A = "A|-0-----------------------3---------------0---------------3---------------------------------------|";
+// String line_E = "E|----------------------1-------------------------------1------------------------------------------|";
+String line_e = "e|-------5-7-----7-|-8-----8-2-----2-|-0---------0-----|";
+String line_B = "B|-----5-----5-----|---5-------3-----|---1---1-----1---|";
+String line_G = "G|---5---------5---|-----5-------2---|-----2---------2-|";
+String line_D = "D|-7---------------|-----------------|-----------------|"; 
+String line_A = "A|-----------------|-----------------|-----------------|"; 
+String line_E = "E|-----------------|-----------------|-----------------|"; 
 String tabs =""; // String to hold all the tabs
 
 
@@ -159,18 +164,14 @@ void loop(){
         sample_count = 0;  // Reset counter
         
         // Detect the note
-        detected_note = dsp.detect_note(input_signal);
+        dsp.core_freqs(input_signal, amps);
         
-        if (detected_note > 0) {
-        }
-      }
-    }
-  }
-    for (int str = 0; str < NUM_STRINGS; str++) {
+        for (int str = 0; str < NUM_STRINGS; str++) {
         if(songNotes[str][step].freq > 0.0f) {
  //         Serial.printf("expected freq %.2f Hz\n",songNotes[str][step].freq);
         }
-        if((fabs(detected_note - songNotes[str][step].freq) < 0.5f)) { // Allow a tolerance of 5 Hz
+        float expected_freq = songNotes[str][step].freq;
+        if (dsp.correct_detection(expected_freq, amps)) { // Allow a tolerance of 5 Hz
           // Serial.printf("Matched string %d at step %d: freq %.2f Hz\n", str, step, detected_note);
           // step++;
           // Serial.printf("Step incremented to %d\n", step);
@@ -186,17 +187,21 @@ void loop(){
           for (int i=0; i < NUM_STRINGS; i++) {
               if(songNotes[i][step].led_index >= 0) { // Check if the led_index is valid
               ws2812b.setPixelColor(songNotes[i][step].led_index, ws2812b.Color(255, 0, 0)); // Turn on the LED for the current step
-              Serial.println(songNotes[i][step].led_index);
-              } 
-              else{
-              Serial.println("fail");
-              }
+              // Serial.println(songNotes[i][step].led_index);
+              // } 
+              // else{
+              // Serial.println("fail");
+               }
           }
           ws2812b.show(); // Update the LED strip
           delay(50);
           break; // Exit the loop after processing the matched note
           }
       }
+      }
+    }
+  }
+    
         // else{
         //   Serial.printf("No match for string %d at step %d: detected %.2f Hz, expected %.2f Hz\n", str, step, detected_note, songNotes[str][step].freq);
         //   delay(100);
